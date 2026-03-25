@@ -1,0 +1,224 @@
+.header {
+  background: var(--color-maroon);
+  color: var(--color-cream);
+  padding: 80px 20px;
+  text-align: center;
+}
+
+.header h1 {
+  font-size: 2.5rem;
+  margin-bottom: 12px;
+}
+
+.header p {
+  opacity: 0.9;
+  font-size: 1.1rem;
+}
+
+.story {
+  padding: 80px 20px;
+  background: var(--color-cream);
+}
+
+.storyContent {
+  max-width: 750px;
+  margin: 0 auto;
+}
+
+.storyImage {
+  max-width: 320px;
+  margin: 0 auto 30px;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow-lg);
+}
+
+.storyImage img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.storyContent h2 {
+  font-size: 2rem;
+  color: var(--color-maroon);
+  margin-bottom: 24px;
+  text-align: center;
+}
+
+.storyContent p {
+  font-size: 1.05rem;
+  line-height: 1.8;
+  color: var(--color-text-dark);
+  margin-bottom: 20px;
+}
+
+.values {
+  padding: 80px 20px;
+  background: var(--color-white);
+}
+
+.valuesTitle {
+  text-align: center;
+  font-size: 2rem;
+  color: var(--color-maroon);
+  margin-bottom: 50px;
+}
+
+.valuesGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 30px;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.valueCard {
+  text-align: center;
+  padding: 30px 20px;
+}
+
+.valueIcon {
+  font-size: 3rem;
+  display: block;
+  margin-bottom: 16px;
+}
+
+.valueCard h3 {
+  font-family: var(--font-heading);
+  color: var(--color-maroon);
+  font-size: 1.2rem;
+  margin-bottom: 12px;
+}
+
+.valueCard p {
+  color: var(--color-gray);
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+
+.ctaSection {
+  background: var(--color-maroon);
+  color: var(--color-cream);
+  padding: 60px 20px;
+  text-align: center;
+}
+
+.ctaSection h2 {
+  font-size: 2rem;
+  margin-bottom: 12px;
+}
+
+.ctaSection p {
+  opacity: 0.9;
+  margin-bottom: 24px;
+}
+
+.ctaBtn {
+  display: inline-block;
+  background: var(--color-gold);
+  color: var(--color-maroon-dark);
+  font-weight: 700;
+  padding: 14px 36px;
+  border-radius: 50px;
+  transition: var(--transition);
+}
+
+.ctaBtn:hover {
+  background: #e0b88a;
+  transform: translateY(-2px);
+}
+
+@media (max-width: 768px) {
+  .header {
+    padding: 50px 20px;
+  }
+
+  .header h1 {
+    font-size: 2rem;
+  }
+
+  .story {
+    padding: 50px 20px;
+  }
+
+  .storyContent h2 {
+    font-size: 1.6rem;
+  }
+
+  .valuesGrid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .valuesTitle {
+    font-size: 1.6rem;
+    margin-bottom: 30px;
+  }
+
+  .values {
+    padding: 50px 20px;
+  }
+
+  .ctaSection {
+    padding: 40px 20px;
+  }
+
+  .ctaSection h2 {
+    font-size: 1.6rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .header {
+    padding: 40px 16px;
+  }
+
+  .header h1 {
+    font-size: 1.6rem;
+  }
+
+  .header p {
+    font-size: 0.95rem;
+  }
+
+  .story {
+    padding: 40px 16px;
+  }
+
+  .storyImage {
+    max-width: 260px;
+  }
+
+  .storyContent h2 {
+    font-size: 1.4rem;
+  }
+
+  .storyContent p {
+    font-size: 0.95rem;
+  }
+
+  .values {
+    padding: 40px 16px;
+  }
+
+  .valuesTitle {
+    font-size: 1.4rem;
+  }
+
+  .valueCard {
+    padding: 20px 16px;
+  }
+
+  .valueIcon {
+    font-size: 2.5rem;
+  }
+
+  .ctaSection h2 {
+    font-size: 1.4rem;
+  }
+
+  .ctaBtn {
+    padding: 12px 28px;
+  }
+}

@@ -1,0 +1,159 @@
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+  animation: fadeIn 0.3s ease;
+  padding: 20px;
+}
+
+.modal {
+  background: var(--color-white);
+  border-radius: var(--radius-lg);
+  padding: 36px 32px;
+  max-width: 400px;
+  width: 100%;
+  text-align: center;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  animation: slideUp 0.3s ease;
+  position: relative;
+}
+
+.closeBtn {
+  position: absolute;
+  top: 12px;
+  right: 14px;
+  background: none;
+  border: none;
+  font-size: 1.2rem;
+  color: var(--color-gray);
+  padding: 4px;
+  transition: var(--transition);
+}
+
+.closeBtn:hover {
+  color: var(--color-text-dark);
+}
+
+.icon {
+  font-size: 2.5rem;
+  margin-bottom: 12px;
+}
+
+.title {
+  font-family: var(--font-heading);
+  font-size: 1.3rem;
+  color: var(--color-maroon);
+  margin-bottom: 8px;
+}
+
+.text {
+  font-size: 0.95rem;
+  color: var(--color-gray);
+  line-height: 1.5;
+  margin-bottom: 24px;
+}
+
+.actions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.signInBtn {
+  display: block;
+  padding: 12px;
+  background: var(--color-maroon);
+  color: var(--color-cream);
+  border: none;
+  border-radius: var(--radius);
+  font-size: 0.95rem;
+  font-weight: 700;
+  transition: var(--transition);
+  text-align: center;
+  text-decoration: none;
+}
+
+.signInBtn:hover {
+  background: var(--color-maroon-dark);
+}
+
+.registerBtn {
+  display: block;
+  padding: 12px;
+  background: transparent;
+  border: 2px solid var(--color-maroon);
+  color: var(--color-maroon);
+  border-radius: var(--radius);
+  font-size: 0.95rem;
+  font-weight: 700;
+  transition: var(--transition);
+  text-align: center;
+  text-decoration: none;
+}
+
+.registerBtn:hover {
+  background: var(--color-maroon);
+  color: var(--color-cream);
+}
+
+.skipBtn {
+  background: none;
+  border: none;
+  color: var(--color-gray);
+  font-size: 0.85rem;
+  margin-top: 8px;
+  text-decoration: underline;
+  transition: var(--transition);
+}
+
+.skipBtn:hover {
+  color: var(--color-text-dark);
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@media (max-width: 480px) {
+  .overlay {
+    padding: 16px;
+    align-items: flex-end;
+  }
+
+  .modal {
+    padding: 28px 20px;
+    margin-bottom: 20px;
+  }
+
+  .icon {
+    font-size: 2rem;
+  }
+
+  .title {
+    font-size: 1.15rem;
+  }
+
+  .text {
+    font-size: 0.9rem;
+    margin-bottom: 20px;
+  }
+
+  .signInBtn,
+  .registerBtn {
+    padding: 11px;
+    font-size: 0.9rem;
+  }
+}

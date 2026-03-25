@@ -1,0 +1,268 @@
+.hero {
+  background: var(--color-maroon);
+  color: var(--color-cream);
+  padding: 100px 20px;
+  text-align: center;
+  min-height: 80vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.heroContent {
+  max-width: 700px;
+}
+
+.heroLogo {
+  height: 120px;
+  margin: 0 auto 30px;
+}
+
+.heroTitle {
+  font-size: 3rem;
+  font-family: var(--font-heading);
+  margin-bottom: 20px;
+  line-height: 1.1;
+}
+
+.heroSubtitle {
+  font-size: 1.15rem;
+  opacity: 0.9;
+  margin-bottom: 40px;
+  line-height: 1.6;
+}
+
+.heroCta {
+  display: inline-block;
+  background: var(--color-gold);
+  color: var(--color-maroon-dark);
+  font-weight: 700;
+  padding: 16px 40px;
+  border-radius: 50px;
+  font-size: 1.1rem;
+  transition: var(--transition);
+  letter-spacing: 0.5px;
+}
+
+.heroCta:hover {
+  background: #e0b88a;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 20px rgba(212, 165, 116, 0.4);
+}
+
+/* Featured */
+.featured {
+  background: var(--color-cream);
+}
+
+.sectionTitle {
+  text-align: center;
+  font-size: 2.2rem;
+  color: var(--color-maroon);
+  margin-bottom: 8px;
+}
+
+.sectionSubtitle {
+  text-align: center;
+  color: var(--color-gray);
+  margin-bottom: 50px;
+  font-size: 1.05rem;
+}
+
+.cookieGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 30px;
+}
+
+.viewAll {
+  text-align: center;
+  margin-top: 40px;
+}
+
+.viewAllLink {
+  color: var(--color-maroon);
+  font-weight: 700;
+  font-size: 1.05rem;
+  transition: var(--transition);
+}
+
+.viewAllLink:hover {
+  color: var(--color-gold);
+}
+
+/* About Blurb */
+.aboutBlurb {
+  background: var(--color-white);
+  padding: 80px 20px;
+}
+
+.aboutContent {
+  max-width: 700px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.aboutContent h2 {
+  font-size: 2rem;
+  color: var(--color-maroon);
+  margin-bottom: 16px;
+}
+
+.aboutContent p {
+  color: var(--color-gray);
+  font-size: 1.05rem;
+  line-height: 1.8;
+  margin-bottom: 24px;
+}
+
+.aboutLink {
+  color: var(--color-maroon);
+  font-weight: 700;
+  transition: var(--transition);
+}
+
+.aboutLink:hover {
+  color: var(--color-gold);
+}
+
+/* CTA Banner */
+.ctaBanner {
+  background: var(--color-maroon);
+  color: var(--color-cream);
+  padding: 80px 20px;
+  text-align: center;
+}
+
+.ctaBanner h2 {
+  font-size: 2rem;
+  margin-bottom: 12px;
+}
+
+.ctaBanner p {
+  opacity: 0.9;
+  margin-bottom: 30px;
+  font-size: 1.05rem;
+}
+
+.ctaBtn {
+  display: inline-block;
+  background: var(--color-gold);
+  color: var(--color-maroon-dark);
+  font-weight: 700;
+  padding: 14px 36px;
+  border-radius: 50px;
+  font-size: 1rem;
+  transition: var(--transition);
+}
+
+.ctaBtn:hover {
+  background: #e0b88a;
+  transform: translateY(-2px);
+}
+
+@media (max-width: 768px) {
+  .hero {
+    padding: 60px 20px;
+    min-height: 60vh;
+  }
+
+  .heroTitle {
+    font-size: 2rem;
+  }
+
+  .heroSubtitle {
+    font-size: 1rem;
+    margin-bottom: 30px;
+  }
+
+  .heroLogo {
+    height: 80px;
+  }
+
+  .heroCta {
+    padding: 14px 32px;
+    font-size: 1rem;
+  }
+
+  .cookieGrid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+  .sectionTitle {
+    font-size: 1.8rem;
+  }
+
+  .aboutBlurb {
+    padding: 50px 20px;
+  }
+
+  .aboutContent h2 {
+    font-size: 1.6rem;
+  }
+
+  .ctaBanner {
+    padding: 50px 20px;
+  }
+
+  .ctaBanner h2 {
+    font-size: 1.6rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .hero {
+    padding: 40px 16px;
+    min-height: 50vh;
+  }
+
+  .heroTitle {
+    font-size: 1.6rem;
+  }
+
+  .heroSubtitle {
+    font-size: 0.9rem;
+    margin-bottom: 24px;
+  }
+
+  .heroLogo {
+    height: 60px;
+    margin-bottom: 20px;
+  }
+
+  .heroCta {
+    padding: 12px 28px;
+    font-size: 0.95rem;
+  }
+
+  .sectionTitle {
+    font-size: 1.5rem;
+  }
+
+  .sectionSubtitle {
+    font-size: 0.9rem;
+    margin-bottom: 30px;
+  }
+
+  .aboutContent h2 {
+    font-size: 1.4rem;
+  }
+
+  .aboutContent p {
+    font-size: 0.95rem;
+  }
+
+  .ctaBanner h2 {
+    font-size: 1.4rem;
+  }
+
+  .ctaBanner p {
+    font-size: 0.95rem;
+  }
+
+  .ctaBtn {
+    padding: 12px 28px;
+    font-size: 0.9rem;
+  }
+}

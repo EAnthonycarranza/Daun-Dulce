@@ -1,0 +1,151 @@
+.header {
+  background: var(--color-maroon);
+  color: var(--color-cream);
+  padding: 80px 20px;
+  text-align: center;
+}
+
+.header h1 {
+  font-size: 2.5rem;
+  margin-bottom: 12px;
+}
+
+.header p {
+  opacity: 0.9;
+  font-size: 1.1rem;
+}
+
+.pricing {
+  padding: 40px 20px;
+  background: var(--color-white);
+}
+
+.priceCards {
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+  flex-wrap: wrap;
+}
+
+.priceCard {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 24px 40px;
+  border-radius: var(--radius-lg);
+  background: var(--color-cream);
+  box-shadow: var(--shadow);
+}
+
+.priceQty {
+  font-family: var(--font-heading);
+  font-size: 1.1rem;
+  color: var(--color-maroon);
+  font-weight: 700;
+}
+
+.priceAmount {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--color-gold);
+}
+
+.cookieGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 30px;
+}
+
+.cta {
+  background: var(--color-maroon);
+  color: var(--color-cream);
+  padding: 60px 20px;
+  text-align: center;
+}
+
+.cta h2 {
+  font-size: 2rem;
+  margin-bottom: 12px;
+}
+
+.cta p {
+  opacity: 0.9;
+  margin-bottom: 24px;
+}
+
+.ctaBtn {
+  display: inline-block;
+  background: var(--color-gold);
+  color: var(--color-maroon-dark);
+  font-weight: 700;
+  padding: 14px 36px;
+  border-radius: 50px;
+  transition: var(--transition);
+}
+
+.ctaBtn:hover {
+  background: #e0b88a;
+  transform: translateY(-2px);
+}
+
+@media (max-width: 768px) {
+  .header {
+    padding: 50px 20px;
+  }
+
+  .header h1 {
+    font-size: 2rem;
+  }
+
+  .cookieGrid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+  .priceCard {
+    padding: 18px 30px;
+  }
+
+  .cta {
+    padding: 40px 20px;
+  }
+
+  .cta h2 {
+    font-size: 1.6rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .header {
+    padding: 40px 16px;
+  }
+
+  .header h1 {
+    font-size: 1.6rem;
+  }
+
+  .header p {
+    font-size: 0.95rem;
+  }
+
+  .priceCards {
+    gap: 16px;
+  }
+
+  .priceCard {
+    padding: 16px 24px;
+  }
+
+  .priceAmount {
+    font-size: 1.3rem;
+  }
+
+  .cta h2 {
+    font-size: 1.4rem;
+  }
+
+  .ctaBtn {
+    padding: 12px 28px;
+  }
+}

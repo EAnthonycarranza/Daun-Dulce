@@ -1,0 +1,28 @@
+# Dependencies
+node_modules/
+
+# Environment variables
+.env
+server/.env
+
+# Build output (rebuilt on deploy)
+client/dist/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+npm-debug.log*
+
+# IDE
+.vscode/
+.idea/
+
+# Uploads (user-generated, not tracked)
+server/uploads/*
+!server/uploads/.gitkeep
+
+# Claude
+.claude/
