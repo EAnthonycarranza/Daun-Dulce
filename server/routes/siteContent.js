@@ -1,9 +1,8 @@
 const express = require('express');
-const fs = require('fs');
-const path = require('path');
 const SiteContent = require('../models/SiteContent');
 const auth = require('../middleware/auth');
 const upload = require('../middleware/upload');
+const { uploadToGCS, deleteFromGCS } = require('../middleware/upload');
 
 const router = express.Router();
 
@@ -83,13 +82,12 @@ router.put('/:page', auth, upload.single('image'), async (req, res) => {
 
     // Handle image upload for about page
     if (req.file) {
-      content.image = `/uploads/${req.file.filename}`;
+      content.image = await uploadToGCS(req.file);
 
       // Delete old image if exists
       const existing = await SiteContent.findOne({ page });
       if (existing?.content?.image) {
-        const oldPath = path.join(__dirname, '..', existing.content.image);
-        if (fs.existsSync(oldPath)) fs.unlinkSync(oldPath);
+        await deleteFromGCS(existing.content.image);
       }
     }
 
@@ -101,6 +99,7 @@ router.put('/:page', auth, upload.single('image'), async (req, res) => {
 
     res.json(doc.content);
   } catch (err) {
+    console.error('Update site content error:', err);
     res.status(500).json({ message: 'Server error' });
   }
 });
@@ -110,14 +109,14 @@ router.delete('/:page/image', auth, async (req, res) => {
   try {
     const doc = await SiteContent.findOne({ page: req.params.page });
     if (doc?.content?.image) {
-      const imgPath = path.join(__dirname, '..', doc.content.image);
-      if (fs.existsSync(imgPath)) fs.unlinkSync(imgPath);
+      await deleteFromGCS(doc.content.image);
       doc.content.image = null;
       doc.markModified('content');
       await doc.save();
     }
     res.json({ message: 'Image removed' });
   } catch (err) {
+    console.error('Delete site image error:', err);
     res.status(500).json({ message: 'Server error' });
   }
 });

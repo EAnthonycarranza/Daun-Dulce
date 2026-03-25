@@ -22,7 +22,7 @@ connectDB();
 app.use(cors());
 app.use(express.json());
 
-// Serve uploaded images
+// Legacy: serve old local uploads (new images go to Google Cloud Storage)
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 // Rate limiting for public POST routes

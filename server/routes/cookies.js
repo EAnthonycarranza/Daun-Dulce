@@ -1,10 +1,9 @@
 const express = require('express');
 const multer = require('multer');
-const fs = require('fs');
-const path = require('path');
 const Cookie = require('../models/Cookie');
 const auth = require('../middleware/auth');
 const upload = require('../middleware/upload');
+const { uploadToGCS, deleteFromGCS } = require('../middleware/upload');
 
 const router = express.Router();
 
@@ -64,7 +63,7 @@ router.post('/', auth, upload.single('image'), handleUploadError, async (req, re
     };
 
     if (req.file) {
-      cookieData.image = `/uploads/${req.file.filename}`;
+      cookieData.image = await uploadToGCS(req.file);
     }
 
     const cookie = await Cookie.create(cookieData);
@@ -74,6 +73,7 @@ router.post('/', auth, upload.single('image'), handleUploadError, async (req, re
       const messages = Object.values(err.errors).map((e) => e.message);
       return res.status(400).json({ message: messages.join(', ') });
     }
+    console.error('Create cookie error:', err);
     res.status(500).json({ message: 'Server error' });
   }
 });
@@ -93,13 +93,12 @@ router.put('/:id', auth, upload.single('image'), handleUploadError, async (req, 
     };
 
     if (req.file) {
-      // Delete old image if it exists
+      // Delete old image from GCS
       const existing = await Cookie.findById(req.params.id);
       if (existing?.image) {
-        const oldPath = path.join(__dirname, '..', existing.image);
-        if (fs.existsSync(oldPath)) fs.unlinkSync(oldPath);
+        await deleteFromGCS(existing.image);
       }
-      updateData.image = `/uploads/${req.file.filename}`;
+      updateData.image = await uploadToGCS(req.file);
     }
 
     const cookie = await Cookie.findByIdAndUpdate(req.params.id, updateData, {
@@ -114,6 +113,7 @@ router.put('/:id', auth, upload.single('image'), handleUploadError, async (req, 
       const messages = Object.values(err.errors).map((e) => e.message);
       return res.status(400).json({ message: messages.join(', ') });
     }
+    console.error('Update cookie error:', err);
     res.status(500).json({ message: 'Server error' });
   }
 });
@@ -124,14 +124,14 @@ router.delete('/:id', auth, async (req, res) => {
     const cookie = await Cookie.findByIdAndDelete(req.params.id);
     if (!cookie) return res.status(404).json({ message: 'Cookie not found' });
 
-    // Delete associated image
+    // Delete associated image from GCS
     if (cookie.image) {
-      const imgPath = path.join(__dirname, '..', cookie.image);
-      if (fs.existsSync(imgPath)) fs.unlinkSync(imgPath);
+      await deleteFromGCS(cookie.image);
     }
 
     res.json({ message: 'Cookie deleted' });
   } catch (err) {
+    console.error('Delete cookie error:', err);
     res.status(500).json({ message: 'Server error' });
   }
 });
@@ -143,14 +143,14 @@ router.delete('/:id/image', auth, async (req, res) => {
     if (!cookie) return res.status(404).json({ message: 'Cookie not found' });
 
     if (cookie.image) {
-      const imgPath = path.join(__dirname, '..', cookie.image);
-      if (fs.existsSync(imgPath)) fs.unlinkSync(imgPath);
+      await deleteFromGCS(cookie.image);
     }
 
     cookie.image = null;
     await cookie.save();
     res.json(cookie);
   } catch (err) {
+    console.error('Delete image error:', err);
     res.status(500).json({ message: 'Server error' });
   }
 });
