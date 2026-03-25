@@ -153,16 +153,47 @@ router.get('/telegram-bot', (req, res) => {
 // Public: Track order by Order # (last 6 chars of _id)
 router.get('/track/:orderNumber', async (req, res) => {
   try {
-    const orderNum = req.params.orderNumber.replace(/^#/, '').trim();
+    const orderNum = req.params.orderNumber.replace(/^#/, '').trim().toLowerCase();
 
     if (!/^[a-f0-9]{6}$/i.test(orderNum)) {
       return res.status(400).json({ message: 'Invalid Order #. Please enter the 6-character code.' });
     }
 
-    // Find orders whose _id ends with this 6-char hex string
-    const orders = await Order.find({
-      _id: { $regex: orderNum + '$', $options: 'i' },
-    }).select('customerName status flavors flavorOther quantity quantityOther paymentMethod pickupDate specialRequests emailConfirmed telegramChatId createdAt');
+    // Use aggregation to convert _id to string and match the last 6 chars
+    const orders = await Order.aggregate([
+      {
+        $addFields: {
+          idString: { $toString: '$_id' },
+        },
+      },
+      {
+        $match: {
+          $expr: {
+            $eq: [
+              { $substr: ['$idString', { $subtract: [{ $strLenCP: '$idString' }, 6] }, 6] },
+              orderNum,
+            ],
+          },
+        },
+      },
+      {
+        $project: {
+          customerName: 1,
+          status: 1,
+          flavors: 1,
+          flavorOther: 1,
+          quantity: 1,
+          quantityOther: 1,
+          paymentMethod: 1,
+          pickupDate: 1,
+          specialRequests: 1,
+          emailConfirmed: 1,
+          telegramChatId: 1,
+          createdAt: 1,
+        },
+      },
+      { $limit: 1 },
+    ]);
 
     if (!orders.length) {
       return res.status(404).json({ message: 'No order found with that Order #.' });
@@ -195,17 +226,28 @@ router.get('/', auth, async (req, res) => {
         { contactEmail: { $regex: cleanSearch, $options: 'i' } },
         { contactPhone: { $regex: cleanSearch, $options: 'i' } },
       ];
+    }
 
-      // Also search by Order # (last 6 chars of _id)
-      // If the search looks like a hex string (2-24 chars), match _id ending
-      if (/^[a-f0-9]{2,24}$/i.test(cleanSearch)) {
-        filter.$or.push(
-          { _id: { $regex: cleanSearch + '$', $options: 'i' } }
+    let orders = await Order.find(filter).sort(sort);
+
+    // Also search by Order # (last 6 chars of _id) if it looks like hex
+    if (search) {
+      const cleanSearch = search.replace(/^#/, '').trim().toLowerCase();
+      if (/^[a-f0-9]{2,6}$/i.test(cleanSearch)) {
+        const idMatches = await Order.find(status && status !== 'all' ? { status } : {}).sort(sort);
+        const matched = idMatches.filter(
+          (o) => o._id.toString().slice(-6).toLowerCase().includes(cleanSearch)
         );
+        // Merge without duplicates
+        const existingIds = new Set(orders.map((o) => o._id.toString()));
+        for (const m of matched) {
+          if (!existingIds.has(m._id.toString())) {
+            orders.push(m);
+          }
+        }
       }
     }
 
-    const orders = await Order.find(filter).sort(sort);
     res.json(orders);
   } catch (err) {
     res.status(500).json({ message: 'Server error' });
