@@ -12,7 +12,7 @@
     "build": "cd client && npm run build",
     "start": "cd server && node server.js",
     "seed": "cd server && node seed.js",
-    "heroku-postbuild": "npm install --prefix client && npm run build && npm install --prefix server"
+    "heroku-postbuild": "cd client && npm install --include=dev && npm run build && cd ../server && npm install"
   },
   "devDependencies": {
     "concurrently": "^9.2.1"
