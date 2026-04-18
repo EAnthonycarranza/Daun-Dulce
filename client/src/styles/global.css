@@ -1,0 +1,207 @@
+:root {
+  /* Core palette pulled from the logo: deep burgundy + warm cream */
+  --color-maroon: #6A1620;
+  --color-maroon-dark: #4A0E16;
+  --color-maroon-deep: #3A0A10;
+  --color-maroon-light: #8B2535;
+  --color-burgundy-50: rgba(106, 22, 32, 0.04);
+  --color-burgundy-100: rgba(106, 22, 32, 0.08);
+
+  --color-cream: #F6E8D4;
+  --color-cream-soft: #FAF1E2;
+  --color-cream-warm: #EFDCC2;
+  --color-ivory: #FDF8EF;
+  --color-white: #FFFFFF;
+
+  --color-gold: #C9A876;
+  --color-gold-soft: #D9BE94;
+  --color-gold-dark: #A6885B;
+
+  --color-text-dark: #2A110F;
+  --color-text-muted: #7A5A52;
+  --color-text-light: #F6E8D4;
+
+  --color-success: #4A7C59;
+  --color-warning: #D4A017;
+  --color-danger: #9C2A20;
+
+  --color-gray-light: #F2E6D5;
+  --color-gray: #9B8E85;
+
+  /* Semantic */
+  --color-border: #E5D5BF;
+  --color-border-light: #EFE3CF;
+  --color-input-bg: var(--color-ivory);
+  --color-error-bg: #F9E6E3;
+  --color-success-bg: #E8F0EA;
+  --color-overlay: rgba(42, 17, 15, 0.55);
+  --color-card-hover: var(--color-cream-soft);
+
+  /* Typography */
+  --font-heading: 'Cormorant Garamond', 'Playfair Display', serif;
+  --font-display: 'Cormorant Garamond', 'Playfair Display', serif;
+  --font-script: 'Cormorant Garamond', serif;
+  --font-body: 'Lato', sans-serif;
+
+  --letter-wide: 0.18em;
+  --letter-mid: 0.08em;
+
+  --max-width: 1200px;
+  --radius: 6px;
+  --radius-lg: 14px;
+  --shadow: 0 1px 2px rgba(42, 17, 15, 0.04), 0 10px 30px -12px rgba(42, 17, 15, 0.12);
+  --shadow-lg: 0 20px 60px -20px rgba(42, 17, 15, 0.25);
+  --shadow-soft: 0 2px 20px rgba(106, 22, 32, 0.05);
+  --transition: all 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+[data-theme="dark"] {
+  --color-maroon: #8B2231;
+  --color-maroon-dark: #661420;
+  --color-maroon-deep: #4A0D15;
+  --color-maroon-light: #A83447;
+  --color-burgundy-50: rgba(255, 255, 255, 0.03);
+  --color-burgundy-100: rgba(255, 255, 255, 0.06);
+
+  --color-cream: #1F1613;
+  --color-cream-soft: #2A1E1A;
+  --color-cream-warm: #26191626;
+  --color-ivory: #1A1210;
+  --color-white: #241815;
+
+  --color-gold: #D4B682;
+  --color-gold-soft: #E1C897;
+  --color-gold-dark: #B2915F;
+
+  --color-text-dark: #F2E4D2;
+  --color-text-muted: #BAA798;
+  --color-text-light: #F6E8D4;
+
+  --color-gray-light: #2E231F;
+  --color-gray: #A89890;
+
+  --color-border: #3D2A26;
+  --color-border-light: #2E221E;
+  --color-input-bg: #2A1E1A;
+  --color-error-bg: #3A1A1A;
+  --color-success-bg: #1A2E1E;
+  --color-overlay: rgba(0, 0, 0, 0.75);
+  --color-card-hover: #2E221E;
+
+  --shadow: 0 2px 12px rgba(0, 0, 0, 0.3);
+  --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.4);
+  --shadow-soft: 0 2px 20px rgba(0, 0, 0, 0.25);
+}
+
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-body);
+  color: var(--color-text-dark);
+  background: var(--color-ivory);
+  line-height: 1.65;
+  font-weight: 400;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  transition: background 0.3s ease, color 0.3s ease;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-heading);
+  font-weight: 500;
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+  color: var(--color-text-dark);
+}
+
+h1 { font-weight: 500; }
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+button {
+  cursor: pointer;
+  font-family: var(--font-body);
+}
+
+input, textarea, select {
+  font-family: var(--font-body);
+}
+
+.container {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+.section {
+  padding: 110px 0;
+}
+
+/* Shared elegant utilities */
+.eyebrow {
+  display: inline-block;
+  font-family: var(--font-body);
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: var(--letter-wide);
+  color: var(--color-gold-dark);
+  font-weight: 700;
+  margin-bottom: 18px;
+}
+
+.ornament {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  margin: 18px auto 26px;
+  color: var(--color-gold);
+}
+
+.ornament::before,
+.ornament::after {
+  content: '';
+  display: block;
+  width: 56px;
+  height: 1px;
+  background: currentColor;
+  opacity: 0.55;
+}
+
+.ornament span {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+  transform: rotate(45deg);
+}
+
+.script-accent {
+  font-family: var(--font-script);
+  font-style: italic;
+  font-weight: 400;
+}
+
+@media (max-width: 768px) {
+  .section {
+    padding: 70px 0;
+  }
+}

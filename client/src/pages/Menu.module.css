@@ -1,0 +1,297 @@
+.menu {
+  background: var(--color-ivory);
+}
+
+/* ---------- Header ---------- */
+.header {
+  background: var(--color-maroon);
+  color: var(--color-cream);
+  padding: 120px 24px 110px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+.header::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse at top, rgba(201, 168, 118, 0.08), transparent 60%),
+    linear-gradient(180deg, var(--color-maroon) 0%, var(--color-maroon-dark) 100%);
+  z-index: -1;
+}
+
+.headerInner {
+  max-width: 680px;
+  margin: 0 auto;
+}
+
+.eyebrow {
+  display: inline-block;
+  font-size: 0.72rem;
+  letter-spacing: var(--letter-wide);
+  text-transform: uppercase;
+  color: var(--color-gold-soft);
+  margin-bottom: 24px;
+  font-weight: 700;
+  padding: 6px 16px;
+  border: 1px solid rgba(201, 168, 118, 0.4);
+  border-radius: 40px;
+}
+
+.header h1 {
+  font-size: clamp(2.4rem, 5vw, 3.8rem);
+  font-weight: 400;
+  margin-bottom: 0;
+  color: var(--color-cream);
+  letter-spacing: -0.01em;
+}
+
+.header h1 em {
+  font-style: italic;
+  color: var(--color-gold-soft);
+  font-weight: 300;
+}
+
+.header p {
+  opacity: 0.85;
+  font-size: 1.05rem;
+  line-height: 1.7;
+  margin-top: 4px;
+  font-weight: 300;
+  max-width: 480px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* ---------- Pricing ---------- */
+.pricing {
+  padding: 60px 24px 20px;
+  background: var(--color-ivory);
+}
+
+.priceCards {
+  display: flex;
+  justify-content: center;
+  gap: 24px;
+  flex-wrap: wrap;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.priceCard {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  padding: 40px 44px;
+  background: var(--color-white);
+  border: 1px solid var(--color-border-light);
+  border-radius: 4px;
+  min-width: 210px;
+  transition: var(--transition);
+  position: relative;
+}
+
+.priceCard::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border: 1px solid var(--color-gold);
+  border-radius: 4px;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+
+.priceCard:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 20px 40px -20px rgba(106, 22, 32, 0.2);
+}
+
+.priceCard:hover::before {
+  opacity: 1;
+}
+
+.priceQty {
+  font-family: var(--font-heading);
+  font-style: italic;
+  font-size: 1.1rem;
+  color: var(--color-gold-dark);
+  font-weight: 400;
+  letter-spacing: 0.02em;
+}
+
+.priceDivider {
+  width: 24px;
+  height: 1px;
+  background: var(--color-border);
+}
+
+.priceAmount {
+  font-family: var(--font-heading);
+  font-size: 2.2rem;
+  font-weight: 500;
+  color: var(--color-maroon);
+  letter-spacing: -0.02em;
+}
+
+.pricePieces {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: var(--letter-wide);
+  color: var(--color-text-muted);
+  font-weight: 700;
+}
+
+/* ---------- Grid ---------- */
+.grid {
+  padding: 60px 24px 110px;
+}
+
+.cookieGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 36px;
+  max-width: var(--max-width);
+  margin: 0 auto;
+}
+
+.emptyState {
+  text-align: center;
+  color: var(--color-text-muted);
+  font-family: var(--font-heading);
+  font-style: italic;
+  font-size: 1.1rem;
+  padding: 60px 20px;
+}
+
+/* ---------- CTA ---------- */
+.cta {
+  position: relative;
+  background: var(--color-maroon);
+  color: var(--color-cream);
+  padding: 110px 24px;
+  text-align: center;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+.ctaBackdrop {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse at center, rgba(201, 168, 118, 0.12), transparent 60%),
+    linear-gradient(180deg, var(--color-maroon-dark), var(--color-maroon));
+  z-index: -1;
+}
+
+.ctaInner {
+  max-width: 640px;
+  margin: 0 auto;
+}
+
+.ctaEyebrow {
+  display: inline-block;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: var(--letter-wide);
+  text-transform: uppercase;
+  color: var(--color-gold-soft);
+  margin-bottom: 22px;
+  padding: 6px 16px;
+  border: 1px solid rgba(201, 168, 118, 0.4);
+  border-radius: 40px;
+}
+
+.cta h2 {
+  font-size: clamp(1.8rem, 3.5vw, 2.6rem);
+  font-weight: 400;
+  margin-bottom: 20px;
+  color: var(--color-cream);
+}
+
+.cta h2 em {
+  font-style: italic;
+  color: var(--color-gold-soft);
+}
+
+.cta p {
+  opacity: 0.85;
+  margin-bottom: 38px;
+  font-size: 1.02rem;
+  font-weight: 300;
+}
+
+.ctaBtn {
+  display: inline-block;
+  background: var(--color-cream);
+  color: var(--color-maroon-dark);
+  font-weight: 700;
+  padding: 16px 42px;
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: var(--letter-wide);
+  transition: var(--transition);
+  border-radius: 2px;
+}
+
+.ctaBtn:hover {
+  background: var(--color-white);
+  transform: translateY(-2px);
+  box-shadow: 0 12px 30px -10px rgba(0, 0, 0, 0.4);
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 768px) {
+  .header {
+    padding: 80px 20px;
+  }
+
+  .pricing {
+    padding: 40px 20px 10px;
+  }
+
+  .priceCards {
+    gap: 16px;
+  }
+
+  .priceCard {
+    padding: 30px 36px;
+    min-width: 180px;
+    flex: 1 1 180px;
+  }
+
+  .priceAmount {
+    font-size: 1.8rem;
+  }
+
+  .grid {
+    padding: 40px 20px 80px;
+  }
+
+  .cookieGrid {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+
+  .cta {
+    padding: 80px 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .header {
+    padding: 60px 16px;
+  }
+
+  .priceCard {
+    padding: 24px 30px;
+    min-width: 150px;
+  }
+
+  .priceAmount {
+    font-size: 1.6rem;
+  }
+}

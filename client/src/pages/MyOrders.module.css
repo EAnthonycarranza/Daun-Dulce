@@ -1,0 +1,254 @@
+.page {
+  padding: 40px 20px;
+  max-width: var(--max-width);
+  margin: 0 auto;
+  min-height: 60vh;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 32px;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.header h1 {
+  font-family: var(--font-heading);
+  font-size: 1.8rem;
+  color: var(--color-maroon);
+}
+
+.headerRight {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.greeting {
+  font-size: 0.9rem;
+  color: var(--color-gray);
+}
+
+.greeting strong {
+  color: var(--color-text-dark);
+}
+
+.logoutBtn {
+  padding: 8px 20px;
+  background: transparent;
+  border: 2px solid var(--color-maroon);
+  color: var(--color-maroon);
+  border-radius: var(--radius);
+  font-size: 0.85rem;
+  font-weight: 700;
+  transition: var(--transition);
+}
+
+.logoutBtn:hover {
+  background: var(--color-maroon);
+  color: var(--color-cream);
+}
+
+.empty {
+  text-align: center;
+  padding: 60px 20px;
+  color: var(--color-gray);
+}
+
+.empty h2 {
+  font-family: var(--font-heading);
+  font-size: 1.3rem;
+  color: var(--color-text-dark);
+  margin-bottom: 8px;
+}
+
+.empty p {
+  margin-bottom: 24px;
+}
+
+.orderLink {
+  display: inline-block;
+  padding: 12px 30px;
+  background: var(--color-maroon);
+  color: var(--color-cream);
+  border-radius: var(--radius);
+  font-weight: 700;
+  transition: var(--transition);
+}
+
+.orderLink:hover {
+  background: var(--color-maroon-dark);
+}
+
+.orderList {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.orderCard {
+  background: var(--color-white);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow);
+  overflow: hidden;
+}
+
+.orderTop {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 24px;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.orderTop:hover {
+  background: var(--color-gray-light);
+}
+
+.orderTopLeft h3 {
+  font-family: var(--font-heading);
+  font-size: 1.05rem;
+  color: var(--color-text-dark);
+  margin-bottom: 4px;
+}
+
+.orderTopLeft span {
+  font-size: 0.85rem;
+  color: var(--color-gray);
+}
+
+.orderTopRight {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.statusBadge {
+  padding: 4px 14px;
+  border-radius: 50px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: white;
+}
+
+.orderDate {
+  font-size: 0.8rem;
+  color: var(--color-gray);
+}
+
+.orderBody {
+  padding: 0 24px 20px;
+  border-top: 1px solid var(--color-gray-light);
+}
+
+.detailGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 16px;
+  padding-top: 16px;
+}
+
+.detailGrid strong {
+  display: block;
+  font-size: 0.8rem;
+  color: var(--color-gray);
+  margin-bottom: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.detailGrid p {
+  font-size: 0.95rem;
+  color: var(--color-text-dark);
+}
+
+.detailFull {
+  grid-column: 1 / -1;
+}
+
+.loadingText {
+  text-align: center;
+  padding: 40px;
+  color: var(--color-gray);
+}
+
+@media (max-width: 768px) {
+  .page {
+    padding: 24px 16px;
+  }
+
+  .header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .header h1 {
+    font-size: 1.5rem;
+  }
+
+  .headerRight {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .orderTop {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 16px;
+  }
+
+  .orderTopRight {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .orderBody {
+    padding: 0 16px 16px;
+  }
+
+  .detailGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 480px) {
+  .page {
+    padding: 16px 12px;
+  }
+
+  .header h1 {
+    font-size: 1.3rem;
+  }
+
+  .greeting {
+    font-size: 0.8rem;
+  }
+
+  .logoutBtn {
+    padding: 6px 14px;
+    font-size: 0.8rem;
+  }
+
+  .orderTopLeft h3 {
+    font-size: 0.95rem;
+  }
+
+  .statusBadge {
+    font-size: 0.7rem;
+    padding: 3px 10px;
+  }
+
+  .empty {
+    padding: 40px 16px;
+  }
+
+  .orderLink {
+    padding: 10px 24px;
+    font-size: 0.9rem;
+  }
+}
