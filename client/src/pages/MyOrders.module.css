@@ -3,6 +3,7 @@
   max-width: var(--max-width);
   margin: 0 auto;
   min-height: 60vh;
+  min-height: 60dvh;
 }
 
 .header {
@@ -36,7 +37,8 @@
 }
 
 .logoutBtn {
-  padding: 8px 20px;
+  padding: 10px 20px;
+  min-height: var(--tap-target);
   background: transparent;
   border: 2px solid var(--color-maroon);
   color: var(--color-maroon);
@@ -69,8 +71,11 @@
 }
 
 .orderLink {
-  display: inline-block;
-  padding: 12px 30px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 14px 30px;
+  min-height: var(--tap-target);
   background: var(--color-maroon);
   color: var(--color-cream);
   border-radius: var(--radius);

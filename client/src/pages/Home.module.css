@@ -10,6 +10,7 @@
   padding: 120px 24px 140px;
   text-align: center;
   min-height: 92vh;
+  min-height: 92dvh;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -41,6 +42,7 @@
 
 .heroContent {
   max-width: 760px;
+  width: 100%;
   position: relative;
   z-index: 1;
   animation: fadeUp 1s cubic-bezier(0.22, 1, 0.36, 1) both;
@@ -66,7 +68,10 @@
 
 .heroLogoWrap {
   margin: 0 auto 30px;
-  display: inline-flex;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: fit-content;
   position: relative;
 }
 
@@ -123,8 +128,11 @@
 
 .heroCta,
 .heroCtaGhost {
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   padding: 16px 38px;
+  min-height: var(--tap-target);
   font-size: 0.78rem;
   font-weight: 700;
   letter-spacing: var(--letter-wide);
@@ -508,11 +516,14 @@
 }
 
 .ctaBtn {
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   background: var(--color-cream);
   color: var(--color-maroon-dark);
   font-weight: 700;
   padding: 16px 42px;
+  min-height: var(--tap-target);
   font-size: 0.78rem;
   text-transform: uppercase;
   letter-spacing: var(--letter-wide);
@@ -527,6 +538,17 @@
 }
 
 /* ---------- Responsive ---------- */
+@media (max-width: 1024px) {
+  .cookieGrid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 28px;
+  }
+
+  .aboutGrid {
+    gap: 60px;
+  }
+}
+
 @media (max-width: 960px) {
   .aboutGrid {
     grid-template-columns: 1fr;
@@ -568,8 +590,9 @@
 
 @media (max-width: 768px) {
   .hero {
-    padding: 80px 20px 100px;
-    min-height: 70vh;
+    padding: 70px 20px 90px;
+    min-height: 82vh;
+    min-height: 82dvh;
   }
 
   .heroLogo {
@@ -584,20 +607,35 @@
   .heroLogoWrap::before { right: calc(100% + 14px); }
   .heroLogoWrap::after { left: calc(100% + 14px); }
 
+  .heroEyebrow {
+    font-size: 0.68rem;
+    padding: 5px 14px;
+    margin-bottom: 22px;
+  }
+
   .heroTitle {
-    font-size: 2rem;
+    font-size: clamp(1.9rem, 7vw, 2.4rem);
+    margin-bottom: 22px;
   }
 
   .heroSubtitle {
     font-size: 0.98rem;
     margin-bottom: 32px;
+    line-height: 1.65;
   }
 
   .heroActions {
     flex-direction: column;
     align-items: stretch;
-    max-width: 280px;
+    max-width: 320px;
     margin: 0 auto;
+    gap: 12px;
+  }
+
+  .heroCta,
+  .heroCtaGhost {
+    padding: 16px 28px;
+    width: 100%;
   }
 
   .heroScroll {
@@ -606,46 +644,125 @@
 
   .cookieGrid {
     grid-template-columns: 1fr;
-    gap: 24px;
+    gap: 22px;
   }
 
   .sectionHeader {
-    margin-bottom: 50px;
+    margin-bottom: 44px;
+  }
+
+  .sectionSubtitle {
+    font-size: 0.96rem;
+    margin-top: 14px;
   }
 
   .aboutBlurb {
-    padding: 70px 20px;
+    padding: 64px 20px;
+  }
+
+  .aboutGrid {
+    gap: 36px;
+  }
+
+  .aboutContent p {
+    font-size: 0.98rem;
+    line-height: 1.75;
+    margin-bottom: 24px;
   }
 
   .pillars {
-    padding: 60px 20px;
+    padding: 54px 20px;
+  }
+
+  .pillar {
+    padding: 14px 20px 26px;
+  }
+
+  .pillar h3 {
+    font-size: 1.3rem;
+  }
+
+  .pillar p {
+    font-size: 0.92rem;
   }
 
   .ctaBanner {
-    padding: 80px 20px;
+    padding: 72px 20px;
+  }
+
+  .ctaBanner p {
+    font-size: 0.98rem;
+    margin-bottom: 32px;
+  }
+
+  .viewAll {
+    margin-top: 40px;
   }
 }
 
 @media (max-width: 480px) {
   .hero {
-    padding: 60px 16px 80px;
-    min-height: 65vh;
+    padding: 56px 16px 72px;
+    min-height: auto;
   }
 
   .heroEyebrow {
-    font-size: 0.65rem;
-    margin-bottom: 20px;
+    font-size: 0.64rem;
+    margin-bottom: 18px;
   }
 
   .heroLogo {
-    height: 72px;
+    height: 76px;
   }
 
+  .heroLogoWrap::before,
+  .heroLogoWrap::after {
+    width: 28px;
+  }
+
+  .heroLogoWrap::before { right: calc(100% + 10px); }
+  .heroLogoWrap::after { left: calc(100% + 10px); }
+
   .heroTitle {
-    font-size: 1.65rem;
+    font-size: 1.7rem;
+    margin-bottom: 18px;
   }
 
   .heroSubtitle {
-    font-size: 0.9rem;
+    font-size: 0.92rem;
+    margin-bottom: 28px;
+  }
+
+  .aboutMonogram {
+    max-width: 200px;
+  }
+
+  .aboutBlurb {
+    padding: 52px 16px;
+  }
+
+  .pillars {
+    padding: 44px 16px;
+  }
+
+  .pillarGrid {
+    gap: 20px;
+  }
+
+  .pillar {
+    padding-bottom: 20px;
+  }
+
+  .ctaBanner {
+    padding: 60px 16px;
+  }
+
+  .sectionHeader {
+    margin-bottom: 36px;
+  }
+
+  .ctaBtn {
+    width: 100%;
+    padding: 16px 24px;
   }
 }

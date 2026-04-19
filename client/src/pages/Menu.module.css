@@ -243,10 +243,38 @@
   box-shadow: 0 12px 30px -10px rgba(0, 0, 0, 0.4);
 }
 
+.ctaBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: var(--tap-target);
+}
+
 /* ---------- Responsive ---------- */
+@media (max-width: 1024px) {
+  .cookieGrid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 28px;
+  }
+}
+
 @media (max-width: 768px) {
   .header {
-    padding: 80px 20px;
+    padding: 70px 20px 64px;
+  }
+
+  .header h1 {
+    font-size: clamp(1.9rem, 7vw, 2.6rem);
+  }
+
+  .header p {
+    font-size: 0.98rem;
+    margin-top: 14px;
+  }
+
+  .eyebrow {
+    margin-bottom: 20px;
+    font-size: 0.68rem;
   }
 
   .pricing {
@@ -254,13 +282,13 @@
   }
 
   .priceCards {
-    gap: 16px;
+    gap: 14px;
   }
 
   .priceCard {
-    padding: 30px 36px;
-    min-width: 180px;
-    flex: 1 1 180px;
+    padding: 26px 24px;
+    min-width: 0;
+    flex: 1 1 calc(50% - 7px);
   }
 
   .priceAmount {
@@ -268,30 +296,85 @@
   }
 
   .grid {
-    padding: 40px 20px 80px;
+    padding: 40px 20px 72px;
   }
 
   .cookieGrid {
     grid-template-columns: 1fr;
-    gap: 24px;
+    gap: 22px;
   }
 
   .cta {
-    padding: 80px 20px;
+    padding: 72px 20px;
+  }
+
+  .cta p {
+    font-size: 0.98rem;
   }
 }
 
 @media (max-width: 480px) {
   .header {
-    padding: 60px 16px;
+    padding: 56px 16px 50px;
+  }
+
+  .header h1 {
+    font-size: 1.75rem;
+  }
+
+  .header p {
+    font-size: 0.92rem;
+  }
+
+  .pricing {
+    padding: 32px 16px 6px;
+  }
+
+  .priceCards {
+    flex-direction: column;
+    gap: 12px;
+    max-width: 320px;
+    margin: 0 auto;
   }
 
   .priceCard {
-    padding: 24px 30px;
-    min-width: 150px;
+    flex-direction: row;
+    justify-content: space-between;
+    padding: 16px 22px;
+    width: 100%;
+    gap: 14px;
+  }
+
+  .priceDivider {
+    display: none;
+  }
+
+  .priceQty {
+    font-size: 0.98rem;
   }
 
   .priceAmount {
+    font-size: 1.5rem;
+  }
+
+  .pricePieces {
+    font-size: 0.64rem;
+  }
+
+  .grid {
+    padding: 32px 16px 60px;
+  }
+
+  .cta {
+    padding: 56px 16px;
+  }
+
+  .cta h2 {
     font-size: 1.6rem;
+  }
+
+  .ctaBtn {
+    width: 100%;
+    padding: 16px 24px;
   }
 }

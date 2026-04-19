@@ -1,18 +1,38 @@
 .header {
   background: var(--color-maroon);
   color: var(--color-cream);
-  padding: 80px 20px;
+  padding: 100px 24px 90px;
   text-align: center;
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+.header::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse at top, rgba(201, 168, 118, 0.08), transparent 60%),
+    linear-gradient(180deg, var(--color-maroon) 0%, var(--color-maroon-dark) 100%);
+  z-index: -1;
 }
 
 .header h1 {
-  font-size: 2.5rem;
-  margin-bottom: 12px;
+  font-size: clamp(2.2rem, 5vw, 3.4rem);
+  font-weight: 400;
+  margin-bottom: 14px;
+  color: var(--color-cream);
+  letter-spacing: -0.01em;
 }
 
 .header p {
-  opacity: 0.9;
-  font-size: 1.1rem;
+  opacity: 0.88;
+  font-size: 1.05rem;
+  font-weight: 300;
+  line-height: 1.65;
+  max-width: 540px;
+  margin: 0 auto;
 }
 
 .formSection {
@@ -133,7 +153,8 @@
   display: flex;
   align-items: center;
   gap: 10px;
-  padding: 10px 14px;
+  padding: 12px 14px;
+  min-height: var(--tap-target);
   border-radius: var(--radius);
   cursor: pointer;
   transition: var(--transition);
@@ -227,11 +248,12 @@
 .submitBtn {
   width: 100%;
   padding: 16px;
+  min-height: var(--tap-target);
   background: var(--color-maroon);
   color: var(--color-cream);
   border: none;
   border-radius: var(--radius);
-  font-size: 1.1rem;
+  font-size: 1.05rem;
   font-weight: 700;
   transition: var(--transition);
   margin-top: 10px;
@@ -385,37 +407,40 @@
 
 @media (max-width: 768px) {
   .header {
-    padding: 50px 20px;
-  }
-
-  .header h1 {
-    font-size: 2rem;
+    padding: 68px 20px 60px;
   }
 
   .formSection {
-    padding: 40px 16px;
+    padding: 44px 18px;
+  }
+
+  .intro {
+    margin-bottom: 28px;
   }
 
   .form {
-    padding: 24px;
+    padding: 28px 22px;
+    border-radius: 10px;
+  }
+
+  .customerBanner,
+  .guestBanner {
+    padding: 12px 16px;
+    font-size: 0.88rem;
   }
 
   .successCard {
-    padding: 40px 24px;
+    padding: 44px 26px;
   }
 
   .successCard h1 {
-    font-size: 1.6rem;
+    font-size: 1.55rem;
   }
 }
 
 @media (max-width: 480px) {
   .header {
-    padding: 40px 16px;
-  }
-
-  .header h1 {
-    font-size: 1.6rem;
+    padding: 52px 16px 46px;
   }
 
   .header p {
@@ -423,15 +448,15 @@
   }
 
   .formSection {
-    padding: 30px 12px;
+    padding: 32px 12px;
   }
 
   .form {
-    padding: 20px 16px;
+    padding: 22px 16px;
   }
 
   .intro p {
-    font-size: 0.9rem;
+    font-size: 0.92rem;
   }
 
   .customerBanner,
@@ -442,22 +467,30 @@
 
   .field input,
   .field textarea {
-    padding: 10px 12px;
+    padding: 11px 12px;
+  }
+
+  .field label {
     font-size: 0.9rem;
+  }
+
+  .fieldHint {
+    font-size: 0.8rem;
   }
 
   .radioLabel,
   .checkboxLabel {
-    padding: 8px 10px;
+    padding: 10px 12px;
+    font-size: 0.9rem;
   }
 
   .submitBtn {
-    padding: 14px;
+    padding: 15px;
     font-size: 1rem;
   }
 
   .successCard {
-    padding: 30px 20px;
+    padding: 34px 20px;
   }
 
   .successIcon {
@@ -470,5 +503,20 @@
 
   .successCard p {
     font-size: 0.9rem;
+  }
+
+  .orderNumber {
+    font-size: 1.15rem;
+  }
+
+  .orderNumber strong {
+    font-size: 1.3rem;
+  }
+
+  .telegramBtn {
+    width: 100%;
+    justify-content: center;
+    padding: 14px 20px;
+    font-size: 1rem;
   }
 }

@@ -10,6 +10,7 @@ client/dist/
 
 # OS files
 .DS_Store
+._*
 Thumbs.db
 
 # Logs

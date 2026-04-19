@@ -5,19 +5,38 @@
 .header {
   background: var(--color-maroon);
   color: var(--color-cream);
-  padding: 80px 20px;
+  padding: 100px 24px 90px;
   text-align: center;
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+.header::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse at top, rgba(201, 168, 118, 0.08), transparent 60%),
+    linear-gradient(180deg, var(--color-maroon) 0%, var(--color-maroon-dark) 100%);
+  z-index: -1;
 }
 
 .header h1 {
-  font-size: 2.5rem;
+  font-size: clamp(2.2rem, 5vw, 3.4rem);
+  font-weight: 400;
   margin-bottom: 12px;
   font-family: var(--font-heading);
+  color: var(--color-cream);
+  letter-spacing: -0.01em;
 }
 
 .header p {
-  opacity: 0.9;
-  font-size: 1.1rem;
+  opacity: 0.88;
+  font-size: 1.05rem;
+  font-weight: 300;
+  max-width: 480px;
+  margin: 0 auto;
 }
 
 .content {
@@ -86,6 +105,7 @@
 
 .searchBtn {
   padding: 12px 24px;
+  min-height: var(--tap-target);
   background: var(--color-maroon);
   color: var(--color-cream);
   border: none;
@@ -253,45 +273,60 @@
 
 @media (max-width: 768px) {
   .header {
-    padding: 50px 20px;
-  }
-
-  .header h1 {
-    font-size: 2rem;
+    padding: 70px 20px 60px;
   }
 
   .content {
-    padding: 24px 16px 40px;
+    padding: 30px 18px 50px;
   }
 
   .searchCard {
-    padding: 24px;
+    padding: 24px 20px;
   }
 
   .searchForm {
     flex-direction: column;
+    gap: 10px;
   }
 
   .searchBtn {
     width: 100%;
   }
+
+  .searchInput {
+    font-size: 1.05rem;
+    padding: 12px 14px 12px 4px;
+  }
+
+  .hashPrefix {
+    font-size: 1.05rem;
+    padding: 12px 0 12px 14px;
+  }
 }
 
 @media (max-width: 480px) {
   .header {
-    padding: 40px 16px;
+    padding: 54px 16px 48px;
   }
 
-  .header h1 {
-    font-size: 1.6rem;
+  .header p {
+    font-size: 0.95rem;
+  }
+
+  .content {
+    padding: 24px 14px 40px;
   }
 
   .searchCard {
-    padding: 20px;
+    padding: 20px 16px;
   }
 
   .orderDetails {
-    padding: 20px;
+    padding: 20px 18px;
+  }
+
+  .orderTitle {
+    font-size: 1.1rem;
   }
 
   .detailItem {
@@ -301,5 +336,14 @@
 
   .detailValue {
     text-align: left;
+    font-size: 0.9rem;
+  }
+
+  .statusLabel {
+    font-size: 1rem;
+  }
+
+  .hint {
+    font-size: 0.78rem;
   }
 }

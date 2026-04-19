@@ -351,6 +351,7 @@
 .submitBtn {
   width: 100%;
   padding: 17px;
+  min-height: var(--tap-target);
   background: var(--color-maroon);
   color: var(--color-cream);
   border: none;
@@ -398,50 +399,123 @@
 @media (max-width: 960px) {
   .grid {
     grid-template-columns: 1fr;
-    gap: 50px;
+    gap: 48px;
+  }
+
+  .info {
+    text-align: center;
+  }
+
+  .info > p {
+    margin-left: auto;
+    margin-right: auto;
+    max-width: 520px;
+  }
+
+  .socialIcons {
+    justify-content: center;
   }
 }
 
 @media (max-width: 768px) {
   .header {
-    padding: 80px 20px;
+    padding: 70px 20px 64px;
+  }
+
+  .header h1 {
+    font-size: clamp(1.9rem, 7vw, 2.6rem);
+    margin-bottom: 16px;
   }
 
   .content {
-    padding: 70px 20px;
+    padding: 60px 20px;
   }
 
   .form {
-    padding: 36px 28px;
+    padding: 34px 24px;
   }
 
   .info h2 {
-    font-size: 1.6rem;
+    font-size: 1.5rem;
+  }
+
+  .info > p {
+    font-size: 0.96rem;
+    margin-bottom: 32px;
+  }
+
+  .infoItem {
+    padding: 14px 16px;
+  }
+
+  .infoItem:hover {
+    transform: none;
+  }
+
+  .captchaChallenge {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
   }
 }
 
 @media (max-width: 480px) {
   .header {
-    padding: 60px 16px;
+    padding: 52px 16px 46px;
+  }
+
+  .header h1 {
+    font-size: 1.75rem;
+  }
+
+  .header p {
+    font-size: 0.92rem;
   }
 
   .content {
-    padding: 50px 16px;
+    padding: 44px 16px;
+  }
+
+  .grid {
+    gap: 36px;
   }
 
   .form {
-    padding: 28px 20px;
+    padding: 26px 18px;
   }
 
   .form h2 {
-    font-size: 1.4rem;
+    font-size: 1.35rem;
+    margin-bottom: 24px;
+  }
+
+  .info h2 {
+    font-size: 1.35rem;
+  }
+
+  .info > p {
+    margin-bottom: 28px;
+  }
+
+  .captchaBox {
+    padding: 14px 14px;
   }
 
   .captchaQuestion {
-    font-size: 0.9rem;
+    font-size: 0.92rem;
   }
 
-  .socialIcons {
-    justify-content: center;
+  .captchaInput {
+    width: 64px;
+  }
+
+  .captchaRefresh {
+    width: 38px;
+    height: 38px;
+  }
+
+  .socialIcons a {
+    width: 42px;
+    height: 42px;
   }
 }
