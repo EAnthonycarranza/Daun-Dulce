@@ -5,6 +5,8 @@ import { FaPlus, FaEdit, FaTrash, FaStar, FaRegStar, FaImage, FaTimes, FaUser, F
 import { useTheme } from '../context/ThemeContext';
 import api from '../services/api';
 import styles from './AdminDashboard.module.css';
+import eventStyles from './Events.module.css';
+import { FaCalendarAlt, FaClock, FaMapMarkerAlt, FaArrowRight } from 'react-icons/fa';
 
 const STATUS_OPTIONS = ['all', 'pending', 'confirmed', 'completed', 'cancelled'];
 
@@ -57,6 +59,12 @@ const AdminDashboard = () => {
                 Products
               </button>
               <button
+                className={`${styles.tab} ${activeTab === 'events' ? styles.tabActive : ''}`}
+                onClick={() => setActiveTab('events')}
+              >
+                Events
+              </button>
+              <button
                 className={`${styles.tab} ${activeTab === 'customers' || activeTab === 'customer-profile' ? styles.tabActive : ''}`}
                 onClick={() => { setCustomerProfileId(null); setActiveTab('customers'); }}
               >
@@ -80,6 +88,7 @@ const AdminDashboard = () => {
       <div className={styles.content}>
         {activeTab === 'orders' && <OrdersPanel />}
         {activeTab === 'products' && <ProductsPanel />}
+        {activeTab === 'events' && <EventsPanel />}
         {activeTab === 'customers' && <CustomersPanel onOpenProfile={openCustomerProfile} />}
         {activeTab === 'customer-profile' && customerProfileId && (
           <CustomerProfile customerId={customerProfileId} onBack={closeCustomerProfile} />
@@ -719,6 +728,293 @@ const CookieForm = ({ cookie, onClose }) => {
             <button type="button" className={styles.cancelFormBtn} onClick={onClose}>Cancel</button>
             <button type="submit" className={styles.saveBtn} disabled={saving}>
               {saving ? 'Saving...' : cookie ? 'Update Cookie' : 'Add Cookie'}
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+  );
+};
+
+/* ===================== EVENTS PANEL ===================== */
+
+const EventsPanel = () => {
+  const [events, setEvents] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [showForm, setShowForm] = useState(false);
+  const [editingEvent, setEditingEvent] = useState(null);
+
+  const fetchEvents = async () => {
+    try {
+      const { data } = await api.get('/events/admin');
+      setEvents(data);
+    } catch {
+      setEvents([]);
+    }
+    setLoading(false);
+  };
+
+  useEffect(() => {
+    fetchEvents();
+  }, []);
+
+  const deleteEvent = async (id) => {
+    if (!window.confirm('Are you sure you want to delete this event?')) return;
+    try {
+      await api.delete(`/events/${id}`);
+      fetchEvents();
+    } catch { /* ignore */ }
+  };
+
+  const handleEdit = (event) => {
+    setEditingEvent(event);
+    setShowForm(true);
+  };
+
+  const handleAdd = () => {
+    setEditingEvent(null);
+    setShowForm(true);
+  };
+
+  const handleFormClose = () => {
+    setShowForm(false);
+    setEditingEvent(null);
+    fetchEvents();
+  };
+
+  const formatDate = (dateStr) => {
+    return new Date(dateStr).toLocaleDateString('en-US', {
+      weekday: 'short', month: 'short', day: 'numeric', year: 'numeric'
+    });
+  };
+
+  if (showForm) {
+    return <EventForm event={editingEvent} onClose={handleFormClose} />;
+  }
+
+  return (
+    <>
+      <div className={styles.productHeader}>
+        <h2>Manage Events</h2>
+        <button className={styles.addBtn} onClick={handleAdd}>
+          <FaPlus /> Add Event
+        </button>
+      </div>
+
+      {loading ? (
+        <p className={styles.loadingText}>Loading events...</p>
+      ) : events.length === 0 ? (
+        <p className={styles.emptyText}>No events yet. Add your first one!</p>
+      ) : (
+        <div className={styles.adminEventList}>
+          {events.map((event) => (
+            <div key={event._id} className={styles.adminEventItem}>
+              {/* Event Card Preview (Matches regular user view) */}
+              <div className={eventStyles.eventCard}>
+                {event.image && (
+                  <div className={eventStyles.imageWrap}>
+                    <img src={event.image} alt={event.title} />
+                  </div>
+                )}
+                <div className={eventStyles.contentWrap}>
+                  <div className={eventStyles.eventMeta}>
+                    <div className={eventStyles.metaRow}>
+                      <span className={eventStyles.metaIcon}><FaCalendarAlt /></span>
+                      <span className={eventStyles.eventDate}>{formatDate(event.date)}</span>
+                    </div>
+                    <div className={eventStyles.metaRow}>
+                      <span className={eventStyles.metaIcon}><FaClock /></span>
+                      <span className={eventStyles.eventTime}>{event.time || 'TBA'}</span>
+                    </div>
+                    <div className={eventStyles.metaRow}>
+                      <span className={eventStyles.metaIcon}><FaMapMarkerAlt /></span>
+                      {event.googleMapsLink ? (
+                        <a 
+                          href={event.googleMapsLink} 
+                          target="_blank" 
+                          rel="noopener noreferrer"
+                          className={eventStyles.locationLink}
+                        >
+                          {event.location}
+                        </a>
+                      ) : (
+                        <span className={eventStyles.eventLocation}>{event.location}</span>
+                      )}
+                    </div>
+                  </div>
+                  <h3 className={eventStyles.eventTitle}>{event.title}</h3>
+                  <p className={eventStyles.eventDesc}>{event.description}</p>
+                  {event.link && (
+                    <a 
+                      href={event.link} 
+                      target="_blank" 
+                      rel="noopener noreferrer" 
+                      className={eventStyles.eventLink}
+                    >
+                      Learn More <FaArrowRight />
+                    </a>
+                  )}
+                </div>
+              </div>
+
+              {/* Admin Actions Bar */}
+              <div className={styles.adminCardActions}>
+                <button className={styles.editBtn} onClick={() => handleEdit(event)}>
+                  <FaEdit /> Edit Event
+                </button>
+                <button className={styles.deleteBtn} onClick={() => deleteEvent(event._id)}>
+                  <FaTrash /> Delete Event
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+    </>
+  );
+};
+
+/* ===================== EVENT FORM ===================== */
+
+const EventForm = ({ event, onClose }) => {
+  const [title, setTitle] = useState(event?.title || '');
+  const [description, setDescription] = useState(event?.description || '');
+  const [date, setDate] = useState(event?.date ? new Date(event.date).toISOString().split('T')[0] : '');
+  const [location, setLocation] = useState(event?.location || '');
+  const [time, setTime] = useState(event?.time || '');
+  const [link, setLink] = useState(event?.link || '');
+  const [googleMapsLink, setGoogleMapsLink] = useState(event?.googleMapsLink || '');
+  const [imageFile, setImageFile] = useState(null);
+  const [imagePreview, setImagePreview] = useState(event?.image || null);
+  const [saving, setSaving] = useState(false);
+  const [error, setError] = useState('');
+  const fileInputRef = useRef(null);
+
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setImageFile(file);
+      setImagePreview(URL.createObjectURL(file));
+    }
+  };
+
+  const removeImage = async () => {
+    if (event?._id && event.image) {
+      try {
+        await api.delete(`/events/${event._id}/image`);
+      } catch { /* ignore */ }
+    }
+    setImageFile(null);
+    setImagePreview(null);
+    if (fileInputRef.current) fileInputRef.current.value = '';
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError('');
+    setSaving(true);
+
+    try {
+      const formData = new FormData();
+      formData.append('title', title);
+      formData.append('description', description);
+      formData.append('date', date);
+      formData.append('location', location);
+      formData.append('time', time);
+      formData.append('link', link);
+      formData.append('googleMapsLink', googleMapsLink);
+      if (imageFile) {
+        formData.append('image', imageFile);
+      }
+
+      if (event?._id) {
+        await api.put(`/events/${event._id}`, formData);
+      } else {
+        await api.post('/events', formData);
+      }
+
+      onClose();
+    } catch (err) {
+      setError(err.response?.data?.message || 'Failed to save event');
+    }
+    setSaving(false);
+  };
+
+  return (
+    <div className={styles.formWrapper}>
+      <div className={styles.formHeader}>
+        <h2>{event ? 'Edit Event' : 'Add New Event'}</h2>
+        <button className={styles.closeBtn} onClick={onClose}><FaTimes /></button>
+      </div>
+
+      {error && <div className={styles.formError}>{error}</div>}
+
+      <form onSubmit={handleSubmit} className={styles.cookieForm}>
+        <div className={styles.imageUpload}>
+          <div className={styles.imagePreviewBox} onClick={() => fileInputRef.current?.click()}>
+            {imagePreview ? (
+              <img src={imagePreview} alt="Preview" />
+            ) : (
+              <div className={styles.uploadPlaceholder}>
+                <FaImage size={32} />
+                <span>Click to upload image</span>
+              </div>
+            )}
+          </div>
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept="image/*"
+            onChange={handleImageChange}
+            style={{ display: 'none' }}
+          />
+          {imagePreview && (
+            <button type="button" className={styles.removeImgBtn} onClick={removeImage}>
+              Remove Image
+            </button>
+          )}
+        </div>
+
+        <div className={styles.formFields}>
+          <div className={styles.formField}>
+            <label>Event Title *</label>
+            <input type="text" value={title} onChange={(e) => setTitle(e.target.value)} required />
+          </div>
+
+          <div className={styles.formField}>
+            <label>Description *</label>
+            <textarea rows="3" value={description} onChange={(e) => setDescription(e.target.value)} required />
+          </div>
+
+          <div className={styles.formRow}>
+            <div className={styles.formField} style={{ flex: 1 }}>
+              <label>Date *</label>
+              <input type="date" value={date} onChange={(e) => setDate(e.target.value)} required />
+            </div>
+            <div className={styles.formField} style={{ flex: 1 }}>
+              <label>Location *</label>
+              <input type="text" value={location} onChange={(e) => setLocation(e.target.value)} required />
+            </div>
+            <div className={styles.formField} style={{ flex: 1 }}>
+              <label>Time (e.g. 6 PM - 9 PM) *</label>
+              <input type="text" value={time} onChange={(e) => setTime(e.target.value)} required />
+            </div>
+          </div>
+
+          <div className={styles.formField}>
+            <label>Learn More Link (optional)</label>
+            <input type="url" value={link} onChange={(e) => setLink(e.target.value)} placeholder="https://instagram.com/..." />
+          </div>
+
+          <div className={styles.formField}>
+            <label>Google Maps Link (optional)</label>
+            <input type="url" value={googleMapsLink} onChange={(e) => setGoogleMapsLink(e.target.value)} placeholder="https://maps.google.com/..." />
+          </div>
+
+          <div className={styles.formActions}>
+            <button type="button" className={styles.cancelFormBtn} onClick={onClose}>Cancel</button>
+            <button type="submit" className={styles.saveBtn} disabled={saving}>
+              {saving ? 'Saving...' : event ? 'Update Event' : 'Add Event'}
             </button>
           </div>
         </div>

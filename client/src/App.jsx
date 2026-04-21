@@ -5,6 +5,7 @@ import { ThemeProvider } from './context/ThemeContext';
 import Layout from './components/layout/Layout';
 import Home from './pages/Home';
 import Menu from './pages/Menu';
+import Events from './pages/Events';
 import About from './pages/About';
 import Contact from './pages/Contact';
 import PreOrder from './pages/PreOrder';
@@ -44,6 +45,7 @@ const App = () => {
             <Route element={<Layout />}>
               <Route path="/" element={<Home />} />
               <Route path="/menu" element={<Menu />} />
+              <Route path="/events" element={<Events />} />
               <Route path="/about" element={<About />} />
               <Route path="/contact" element={<Contact />} />
               <Route path="/pre-order" element={<PreOrder />} />

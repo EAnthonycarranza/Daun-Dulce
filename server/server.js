@@ -9,6 +9,7 @@ const authRoutes = require('./routes/auth');
 const orderRoutes = require('./routes/orders');
 const contactRoutes = require('./routes/contact');
 const cookieRoutes = require('./routes/cookies');
+const eventRoutes = require('./routes/events');
 const customerRoutes = require('./routes/customers');
 const siteContentRoutes = require('./routes/siteContent');
 const { startBot: startTelegramBot } = require('./utils/telegramBot');
@@ -37,6 +38,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/orders', orderRoutes);
 app.use('/api/contact', publicLimiter, contactRoutes);
 app.use('/api/cookies', cookieRoutes);
+app.use('/api/events', eventRoutes);
 app.use('/api/customers', customerRoutes);
 app.use('/api/site-content', siteContentRoutes);
 

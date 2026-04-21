@@ -46,6 +46,7 @@ const Navbar = () => {
         <ul className={styles.leftLinks}>
           <li><NavLink to="/" onClick={closeMenu} className={({ isActive }) => isActive ? styles.active : ''}>Home</NavLink></li>
           <li><NavLink to="/menu" onClick={closeMenu} className={({ isActive }) => isActive ? styles.active : ''}>Menu</NavLink></li>
+          <li><NavLink to="/events" onClick={closeMenu} className={({ isActive }) => isActive ? styles.active : ''}>Events</NavLink></li>
           <li><NavLink to="/about" onClick={closeMenu} className={({ isActive }) => isActive ? styles.active : ''}>About</NavLink></li>
           <li><NavLink to="/contact" onClick={closeMenu} className={({ isActive }) => isActive ? styles.active : ''}>Contact</NavLink></li>
         </ul>
@@ -91,6 +92,7 @@ const Navbar = () => {
         >
           <li><NavLink to="/" onClick={closeMenu} className={({ isActive }) => isActive ? styles.active : ''}>Home</NavLink></li>
           <li><NavLink to="/menu" onClick={closeMenu} className={({ isActive }) => isActive ? styles.active : ''}>Menu</NavLink></li>
+          <li><NavLink to="/events" onClick={closeMenu} className={({ isActive }) => isActive ? styles.active : ''}>Events</NavLink></li>
           <li><NavLink to="/about" onClick={closeMenu} className={({ isActive }) => isActive ? styles.active : ''}>About</NavLink></li>
           <li><NavLink to="/contact" onClick={closeMenu} className={({ isActive }) => isActive ? styles.active : ''}>Contact</NavLink></li>
           <li>
