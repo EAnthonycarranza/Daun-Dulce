@@ -1,9 +1,17 @@
 import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { FaPlus, FaEdit, FaTrash, FaStar, FaRegStar, FaImage, FaTimes, FaUser, FaEnvelope, FaPhone, FaSun, FaMoon, FaDesktop, FaArrowLeft, FaUndo, FaPaperPlane, FaCheckCircle, FaTimesCircle } from 'react-icons/fa';
+import {
+  FaPlus, FaEdit, FaTrash, FaStar, FaRegStar, FaImage, FaTimes, FaUser,
+  FaEnvelope, FaPhone, FaSun, FaMoon, FaDesktop, FaArrowLeft, FaUndo,
+  FaPaperPlane, FaCheckCircle, FaTimesCircle,
+  FaClipboardList, FaCookieBite, FaUsers, FaFileAlt, FaBars, FaSignOutAlt,
+  FaChartLine, FaSearch, FaFileInvoiceDollar,
+} from 'react-icons/fa';
 import { useTheme } from '../context/ThemeContext';
 import api from '../services/api';
+import logo from '../assets/images/DaunDulce_Logo.png';
+import MonthlyChart from '../components/ui/MonthlyChart';
 import styles from './AdminDashboard.module.css';
 import eventStyles from './Events.module.css';
 import { FaCalendarAlt, FaClock, FaMapMarkerAlt, FaArrowRight } from 'react-icons/fa';
@@ -17,9 +25,20 @@ const STATUS_COLORS = {
   cancelled: '#C0392B',
 };
 
+const NAV_ITEMS = [
+  { key: 'insights', label: 'Insights', icon: FaChartLine, description: 'Monthly trends across orders & quotes' },
+  { key: 'orders', label: 'Pre-Orders', icon: FaClipboardList, description: 'Manage and track customer pre-orders' },
+  { key: 'quotes', label: 'Event Quotes', icon: FaFileInvoiceDollar, description: 'Review and respond to event quote requests' },
+  { key: 'products', label: 'Menu Items', icon: FaCookieBite, description: 'Manage your cookie catalog and availability' },
+  { key: 'events', label: 'Pop-Up Events', icon: FaCalendarAlt, description: 'Manage upcoming markets and appearances' },
+  { key: 'customers', label: 'Customers', icon: FaUsers, description: 'Customer directory and order history' },
+  { key: 'pages', label: 'Site Content', icon: FaFileAlt, description: 'Update pricing, flavors, and website text' },
+];
+
 const AdminDashboard = () => {
-  const [activeTab, setActiveTab] = useState('orders');
+  const [activeTab, setActiveTab] = useState('insights');
   const [customerProfileId, setCustomerProfileId] = useState(null);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
   const { logout } = useAuth();
   const navigate = useNavigate();
   const { mode, toggleTheme } = useTheme();
@@ -39,61 +58,133 @@ const AdminDashboard = () => {
     setActiveTab('customers');
   };
 
+  const current = activeTab === 'customer-profile'
+    ? NAV_ITEMS.find((n) => n.key === 'customers')
+    : NAV_ITEMS.find((n) => n.key === activeTab);
+
+  const goTo = (key) => {
+    if (key === 'customers') setCustomerProfileId(null);
+    setActiveTab(key);
+    setSidebarOpen(false);
+  };
+
+  const themeIcon = mode === 'system' ? <FaDesktop /> : mode === 'light' ? <FaSun /> : <FaMoon />;
+  const themeLabel = mode === 'system' ? 'System' : mode === 'light' ? 'Light' : 'Dark';
+
   return (
     <div className={styles.dashboard}>
-      <header className={styles.header}>
-        <div className={styles.headerInner}>
-          <h1>Daun Dulce Admin</h1>
-          <div className={styles.headerRight}>
-            <div className={styles.tabs}>
-              <button
-                className={`${styles.tab} ${activeTab === 'orders' ? styles.tabActive : ''}`}
-                onClick={() => setActiveTab('orders')}
-              >
-                Orders
-              </button>
-              <button
-                className={`${styles.tab} ${activeTab === 'products' ? styles.tabActive : ''}`}
-                onClick={() => setActiveTab('products')}
-              >
-                Products
-              </button>
-              <button
-                className={`${styles.tab} ${activeTab === 'events' ? styles.tabActive : ''}`}
-                onClick={() => setActiveTab('events')}
-              >
-                Events
-              </button>
-              <button
-                className={`${styles.tab} ${activeTab === 'customers' || activeTab === 'customer-profile' ? styles.tabActive : ''}`}
-                onClick={() => { setCustomerProfileId(null); setActiveTab('customers'); }}
-              >
-                Customers
-              </button>
-              <button
-                className={`${styles.tab} ${activeTab === 'pages' ? styles.tabActive : ''}`}
-                onClick={() => setActiveTab('pages')}
-              >
-                Pages
-              </button>
-            </div>
-            <button onClick={toggleTheme} className={styles.themeToggle} aria-label="Toggle theme" title={mode === 'system' ? 'System' : mode === 'light' ? 'Light' : 'Dark'}>
-              {mode === 'system' ? <FaDesktop /> : mode === 'light' ? <FaSun /> : <FaMoon />}
-            </button>
-            <button onClick={handleLogout} className={styles.logoutBtn}>Log Out</button>
+      {sidebarOpen && (
+        <div className={styles.sidebarBackdrop} onClick={() => setSidebarOpen(false)} />
+      )}
+
+      <aside className={`${styles.sidebar} ${sidebarOpen ? styles.sidebarOpen : ''}`}>
+        <div className={styles.brand}>
+          <img src={logo} alt="Daun Dulce" className={styles.brandLogo} />
+          <div className={styles.brandText}>
+            <span className={styles.brandName}>Daun Dulce</span>
+            <span className={styles.brandSub}>Admin Console</span>
           </div>
         </div>
-      </header>
 
-      <div className={styles.content}>
-        {activeTab === 'orders' && <OrdersPanel />}
-        {activeTab === 'products' && <ProductsPanel />}
-        {activeTab === 'events' && <EventsPanel />}
-        {activeTab === 'customers' && <CustomersPanel onOpenProfile={openCustomerProfile} />}
-        {activeTab === 'customer-profile' && customerProfileId && (
-          <CustomerProfile customerId={customerProfileId} onBack={closeCustomerProfile} />
-        )}
-        {activeTab === 'pages' && <PagesPanel />}
+        <nav className={styles.nav} aria-label="Admin navigation">
+          <span className={styles.navLabel}>Workspace</span>
+          {NAV_ITEMS.map((item) => {
+            const Icon = item.icon;
+            const isActive = activeTab === item.key
+              || (item.key === 'customers' && activeTab === 'customer-profile');
+            return (
+              <button
+                key={item.key}
+                className={`${styles.navItem} ${isActive ? styles.navItemActive : ''}`}
+                onClick={() => goTo(item.key)}
+              >
+                <span className={styles.navIcon}><Icon /></span>
+                <span className={styles.navText}>{item.label}</span>
+                {isActive && <span className={styles.navIndicator} aria-hidden />}
+              </button>
+            );
+          })}
+        </nav>
+
+        <div className={styles.sidebarFooter}>
+          <button
+            onClick={toggleTheme}
+            className={styles.sidebarAction}
+            aria-label="Toggle theme"
+            title={themeLabel}
+          >
+            <span className={styles.navIcon}>{themeIcon}</span>
+            <span className={styles.navText}>Theme · {themeLabel}</span>
+          </button>
+          <button onClick={handleLogout} className={`${styles.sidebarAction} ${styles.sidebarLogout}`}>
+            <span className={styles.navIcon}><FaSignOutAlt /></span>
+            <span className={styles.navText}>Log Out</span>
+          </button>
+        </div>
+      </aside>
+
+      <div className={styles.main}>
+        <header className={styles.topbar}>
+          <button
+            className={styles.menuBtn}
+            onClick={() => setSidebarOpen(true)}
+            aria-label="Open navigation"
+          >
+            <FaBars />
+          </button>
+          <div className={styles.topbarTitle}>
+            <span className={styles.breadcrumb}>
+              <FaChartLine /> Dashboard
+            </span>
+            <h1>{current?.label || 'Dashboard'}</h1>
+            <p>{current?.description}</p>
+          </div>
+          <div className={styles.topbarActions}>
+            <button
+              onClick={toggleTheme}
+              className={styles.iconBtn}
+              aria-label="Toggle theme"
+              title={themeLabel}
+            >
+              {themeIcon}
+            </button>
+            <button onClick={handleLogout} className={styles.logoutChip}>
+              <FaSignOutAlt /> <span>Log Out</span>
+            </button>
+          </div>
+        </header>
+
+        <div className={styles.content}>
+          {activeTab === 'insights' && <InsightsPanel />}
+          {activeTab === 'orders' && <OrdersPanel />}
+          {activeTab === 'quotes' && <QuotesPanel />}
+          {activeTab === 'products' && <ProductsPanel />}
+          {activeTab === 'events' && <EventsPanel />}
+          {activeTab === 'customers' && <CustomersPanel onOpenProfile={openCustomerProfile} />}
+          {activeTab === 'customer-profile' && customerProfileId && (
+            <CustomerProfile customerId={customerProfileId} onBack={closeCustomerProfile} />
+          )}
+          {activeTab === 'pages' && <PagesPanel />}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+/* ===================== COMMON COMPONENTS ===================== */
+
+const DeleteModal = ({ isOpen, title, message, onConfirm, onCancel, confirmText = 'Yes, Delete', cancelText = 'Cancel' }) => {
+  if (!isOpen) return null;
+  return (
+    <div className={styles.modalOverlay} onClick={onCancel}>
+      <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
+        <div className={styles.modalIcon}>🗑️</div>
+        <h3 className={styles.modalTitle}>{title}</h3>
+        <p className={styles.modalText}>{message}</p>
+        <div className={styles.modalActions}>
+          <button className={styles.modalKeepBtn} onClick={onCancel}>{cancelText}</button>
+          <button className={styles.modalCancelBtn} onClick={onConfirm}>{confirmText}</button>
+        </div>
       </div>
     </div>
   );
@@ -175,16 +266,25 @@ const OrdersPanel = () => {
     return order.contact || order.contactEmail || order.contactPhone || '';
   };
 
+  const counts = orders.reduce((acc, o) => {
+    acc[o.status] = (acc[o.status] || 0) + 1;
+    acc.total = (acc.total || 0) + 1;
+    return acc;
+  }, { total: 0 });
+
   return (
     <>
       <div className={styles.filters}>
-        <input
-          type="text"
-          placeholder="Search by name, contact, or Order # ..."
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          className={styles.searchInput}
-        />
+        <div className={styles.searchWrap}>
+          <FaSearch className={styles.searchIcon} aria-hidden />
+          <input
+            type="text"
+            placeholder="Search by name, contact, or Order #…"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            className={styles.searchInput}
+          />
+        </div>
         <div className={styles.statusFilters}>
           {STATUS_OPTIONS.map((s) => (
             <button
@@ -200,11 +300,15 @@ const OrdersPanel = () => {
 
       <div className={styles.stats}>
         <div className={styles.statCard}>
-          <span className={styles.statNum}>{orders.length}</span>
-          <span className={styles.statLabel}>
-            {statusFilter === 'all' ? 'Total Orders' : `${statusFilter} Orders`}
-          </span>
+          <span className={styles.statNum}>{counts.total}</span>
+          <span className={styles.statLabel}>Total Orders</span>
         </div>
+        {STATUS_OPTIONS.filter(s => s !== 'all').map(s => (
+          <div key={s} className={styles.statCard}>
+            <span className={styles.statNum}>{counts[s] || 0}</span>
+            <span className={styles.statLabel}>{s}</span>
+          </div>
+        ))}
       </div>
 
       {loading ? (
@@ -403,34 +507,18 @@ const OrdersPanel = () => {
         </div>
       )}
 
-      {deleteModal.open && (
-        <div className={styles.modalOverlay} onClick={() => setDeleteModal({ open: false, orderId: null, customerName: '' })}>
-          <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
-            <div className={styles.modalIcon}>🗑️</div>
-            <h3 className={styles.modalTitle}>Delete Order?</h3>
-            <p className={styles.modalText}>
-              Are you sure you want to permanently delete the order for <strong>{deleteModal.customerName}</strong>? This action cannot be undone and all order data will be lost.
-            </p>
-            <div className={styles.modalActions}>
-              <button
-                className={styles.modalKeepBtn}
-                onClick={() => setDeleteModal({ open: false, orderId: null, customerName: '' })}
-              >
-                Keep Order
-              </button>
-              <button
-                className={styles.modalCancelBtn}
-                onClick={() => {
-                  deleteOrder(deleteModal.orderId);
-                  setDeleteModal({ open: false, orderId: null, customerName: '' });
-                }}
-              >
-                Yes, Delete Order
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+      <DeleteModal
+        isOpen={deleteModal.open}
+        title="Delete Order?"
+        message={<>Are you sure you want to permanently delete the order for <strong>{deleteModal.customerName}</strong>? This action cannot be undone and all order data will be lost.</>}
+        confirmText="Yes, Delete Order"
+        cancelText="Keep Order"
+        onConfirm={() => {
+          deleteOrder(deleteModal.orderId);
+          setDeleteModal({ open: false, orderId: null, customerName: '' });
+        }}
+        onCancel={() => setDeleteModal({ open: false, orderId: null, customerName: '' })}
+      />
     </>
   );
 };
@@ -442,6 +530,7 @@ const ProductsPanel = () => {
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
   const [editingCookie, setEditingCookie] = useState(null);
+  const [deleteModal, setDeleteModal] = useState({ open: false, id: null, name: '' });
 
   const fetchCookies = async () => {
     try {
@@ -458,7 +547,6 @@ const ProductsPanel = () => {
   }, []);
 
   const deleteCookie = async (id) => {
-    if (!window.confirm('Are you sure you want to delete this cookie?')) return;
     try {
       await api.delete(`/cookies/${id}`);
       fetchCookies();
@@ -569,8 +657,8 @@ const ProductsPanel = () => {
                   >
                     {cookie.available ? 'Hide' : 'Show'}
                   </button>
-                  <button className={styles.deleteBtn} onClick={() => deleteCookie(cookie._id)}>
-                    <FaTrash />
+                  <button className={styles.deleteBtn} onClick={() => setDeleteModal({ open: true, id: cookie._id, name: cookie.name })}>
+                    <FaTrash /> Delete
                   </button>
                 </div>
               </div>
@@ -578,6 +666,17 @@ const ProductsPanel = () => {
           ))}
         </div>
       )}
+      <DeleteModal
+        isOpen={deleteModal.open}
+        title="Delete Cookie?"
+        message={<>Are you sure you want to delete <strong>{deleteModal.name}</strong>? This will permanently remove it from your menu catalog.</>}
+        confirmText="Yes, Delete Cookie"
+        onConfirm={() => {
+          deleteCookie(deleteModal.id);
+          setDeleteModal({ open: false, id: null, name: '' });
+        }}
+        onCancel={() => setDeleteModal({ open: false, id: null, name: '' })}
+      />
     </>
   );
 };
@@ -743,6 +842,7 @@ const EventsPanel = () => {
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
   const [editingEvent, setEditingEvent] = useState(null);
+  const [deleteModal, setDeleteModal] = useState({ open: false, id: null, title: '' });
 
   const fetchEvents = async () => {
     try {
@@ -759,7 +859,6 @@ const EventsPanel = () => {
   }, []);
 
   const deleteEvent = async (id) => {
-    if (!window.confirm('Are you sure you want to delete this event?')) return;
     try {
       await api.delete(`/events/${id}`);
       fetchEvents();
@@ -862,7 +961,7 @@ const EventsPanel = () => {
                 <button className={styles.editBtn} onClick={() => handleEdit(event)}>
                   <FaEdit /> Edit Event
                 </button>
-                <button className={styles.deleteBtn} onClick={() => deleteEvent(event._id)}>
+                <button className={styles.deleteBtn} onClick={() => setDeleteModal({ open: true, id: event._id, title: event.title })}>
                   <FaTrash /> Delete Event
                 </button>
               </div>
@@ -870,6 +969,17 @@ const EventsPanel = () => {
           ))}
         </div>
       )}
+      <DeleteModal
+        isOpen={deleteModal.open}
+        title="Delete Event?"
+        message={<>Are you sure you want to delete <strong>{deleteModal.title}</strong>? This will permanently remove it from your upcoming events list.</>}
+        confirmText="Yes, Delete Event"
+        onConfirm={() => {
+          deleteEvent(deleteModal.id);
+          setDeleteModal({ open: false, id: null, title: '' });
+        }}
+        onCancel={() => setDeleteModal({ open: false, id: null, title: '' })}
+      />
     </>
   );
 };
@@ -1029,6 +1139,7 @@ const CustomersPanel = ({ onOpenProfile }) => {
   const [customers, setCustomers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
+  const [deleteModal, setDeleteModal] = useState({ open: false, id: null, name: '' });
 
   const fetchCustomers = async () => {
     try {
@@ -1052,17 +1163,27 @@ const CustomersPanel = ({ onOpenProfile }) => {
     });
   };
 
+  const deleteCustomer = async (id) => {
+    try {
+      await api.delete(`/customers/${id}`);
+      fetchCustomers();
+    } catch { /* ignore */ }
+  };
+
   return (
     <>
       <div className={styles.productHeader}>
         <h2>Customers</h2>
-        <input
-          type="text"
-          placeholder="Search by name, email, or phone..."
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          className={styles.searchInput}
-        />
+        <div className={styles.searchWrap}>
+          <FaSearch className={styles.searchIcon} aria-hidden />
+          <input
+            type="text"
+            placeholder="Search by name, email, or phone…"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            className={styles.searchInput}
+          />
+        </div>
       </div>
 
       <div className={styles.stats}>
@@ -1096,12 +1217,33 @@ const CustomersPanel = ({ onOpenProfile }) => {
                     {cust.orderCount} {cust.orderCount === 1 ? 'order' : 'orders'}
                   </span>
                   <span className={styles.orderDate}>Joined {formatDate(cust.createdAt)}</span>
+                  <button 
+                    className={styles.deleteBtn} 
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setDeleteModal({ open: true, id: cust._id, name: cust.name });
+                    }}
+                    style={{ marginLeft: '12px', padding: '6px 10px', fontSize: '0.8rem' }}
+                  >
+                    <FaTrash /> Delete
+                  </button>
                 </div>
               </div>
             </div>
           ))}
         </div>
       )}
+      <DeleteModal
+        isOpen={deleteModal.open}
+        title="Delete Customer?"
+        message={<>Are you sure you want to delete <strong>{deleteModal.name}</strong>? This will permanently remove their profile and un-link their past orders.</>}
+        confirmText="Yes, Delete Customer"
+        onConfirm={() => {
+          deleteCustomer(deleteModal.id);
+          setDeleteModal({ open: false, id: null, name: '' });
+        }}
+        onCancel={() => setDeleteModal({ open: false, id: null, name: '' })}
+      />
     </>
   );
 };
@@ -1276,6 +1418,7 @@ const AboutEditor = () => {
   const [saved, setSaved] = useState(false);
   const [imageFile, setImageFile] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
+  const [deleteModal, setDeleteModal] = useState({ open: false, type: '', index: null });
   const fileInputRef = useRef(null);
 
   useEffect(() => {
@@ -1416,7 +1559,7 @@ const AboutEditor = () => {
             style={{ display: 'none' }}
           />
           {imagePreview && (
-            <button type="button" className={styles.removeImgBtn} onClick={removeImage}>
+            <button type="button" className={styles.removeImgBtn} onClick={() => setDeleteModal({ open: true, type: 'image' })}>
               Remove Image
             </button>
           )}
@@ -1437,7 +1580,7 @@ const AboutEditor = () => {
               <textarea rows="3" value={p} onChange={(e) => handleParagraphChange(i, e.target.value)} />
             </div>
             {content.storyParagraphs.length > 1 && (
-              <button className={styles.removeRowBtn} onClick={() => removeParagraph(i)} title="Remove"><FaTimes /></button>
+              <button className={styles.removeRowBtn} onClick={() => setDeleteModal({ open: true, type: 'paragraph', index: i })} title="Remove"><FaTimes /></button>
             )}
           </div>
         ))}
@@ -1463,7 +1606,7 @@ const AboutEditor = () => {
                 <input type="text" value={v.title} onChange={(e) => handleValueChange(i, 'title', e.target.value)} />
               </div>
               {content.values.length > 1 && (
-                <button className={styles.removeRowBtn} onClick={() => removeValue(i)} title="Remove"><FaTimes /></button>
+                <button className={styles.removeRowBtn} onClick={() => setDeleteModal({ open: true, type: 'value', index: i })} title="Remove"><FaTimes /></button>
               )}
             </div>
             <div className={styles.formField}>
@@ -1494,6 +1637,23 @@ const AboutEditor = () => {
           {saving ? 'Saving...' : 'Save Changes'}
         </button>
       </div>
+    <DeleteModal
+        isOpen={deleteModal.open}
+        title={deleteModal.type === 'image' ? 'Remove Image?' : 'Remove Item?'}
+        message={
+          deleteModal.type === 'paragraph' ? 'Are you sure you want to remove this paragraph?' :
+          deleteModal.type === 'value' ? 'Are you sure you want to remove this value/feature?' :
+          'Are you sure you want to remove this image?'
+        }
+        confirmText="Yes, Remove"
+        onConfirm={() => {
+          if (deleteModal.type === 'paragraph') removeParagraph(deleteModal.index);
+          else if (deleteModal.type === 'value') removeValue(deleteModal.index);
+          else if (deleteModal.type === 'image') removeImage();
+          setDeleteModal({ open: false, type: '', index: null });
+        }}
+        onCancel={() => setDeleteModal({ open: false, type: '', index: null })}
+      />
     </div>
   );
 };
@@ -1505,6 +1665,7 @@ const PreOrderEditor = () => {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
+  const [deleteModal, setDeleteModal] = useState({ open: false, field: '', index: null });
 
   useEffect(() => {
     const fetch = async () => {
@@ -1584,7 +1745,7 @@ const PreOrderEditor = () => {
               <textarea rows="3" value={p} onChange={(e) => handleArrayChange('introParagraphs', i, e.target.value)} />
             </div>
             {content.introParagraphs.length > 1 && (
-              <button className={styles.removeRowBtn} onClick={() => removeArrayItem('introParagraphs', i)} title="Remove"><FaTimes /></button>
+              <button className={styles.removeRowBtn} onClick={() => setDeleteModal({ open: true, field: 'introParagraphs', index: i })} title="Remove"><FaTimes /></button>
             )}
           </div>
         ))}
@@ -1601,7 +1762,7 @@ const PreOrderEditor = () => {
               <input type="text" value={q} onChange={(e) => handleArrayChange('quantities', i, e.target.value)} />
             </div>
             {content.quantities.length > 1 && (
-              <button className={styles.removeRowBtn} onClick={() => removeArrayItem('quantities', i)} title="Remove"><FaTimes /></button>
+              <button className={styles.removeRowBtn} onClick={() => setDeleteModal({ open: true, field: 'quantities', index: i })} title="Remove"><FaTimes /></button>
             )}
           </div>
         ))}
@@ -1617,7 +1778,7 @@ const PreOrderEditor = () => {
               <input type="text" value={m} onChange={(e) => handleArrayChange('paymentMethods', i, e.target.value)} />
             </div>
             {content.paymentMethods.length > 1 && (
-              <button className={styles.removeRowBtn} onClick={() => removeArrayItem('paymentMethods', i)} title="Remove"><FaTimes /></button>
+              <button className={styles.removeRowBtn} onClick={() => setDeleteModal({ open: true, field: 'paymentMethods', index: i })} title="Remove"><FaTimes /></button>
             )}
           </div>
         ))}
@@ -1633,7 +1794,7 @@ const PreOrderEditor = () => {
               <input type="text" value={d} onChange={(e) => handleArrayChange('pickupDates', i, e.target.value)} />
             </div>
             {content.pickupDates.length > 1 && (
-              <button className={styles.removeRowBtn} onClick={() => removeArrayItem('pickupDates', i)} title="Remove"><FaTimes /></button>
+              <button className={styles.removeRowBtn} onClick={() => setDeleteModal({ open: true, field: 'pickupDates', index: i })} title="Remove"><FaTimes /></button>
             )}
           </div>
         ))}
@@ -1650,7 +1811,7 @@ const PreOrderEditor = () => {
               <textarea rows="2" value={t} onChange={(e) => handleArrayChange('terms', i, e.target.value)} />
             </div>
             {content.terms.length > 1 && (
-              <button className={styles.removeRowBtn} onClick={() => removeArrayItem('terms', i)} title="Remove"><FaTimes /></button>
+              <button className={styles.removeRowBtn} onClick={() => setDeleteModal({ open: true, field: 'terms', index: i })} title="Remove"><FaTimes /></button>
             )}
           </div>
         ))}
@@ -1680,8 +1841,771 @@ const PreOrderEditor = () => {
           {saving ? 'Saving...' : 'Save Changes'}
         </button>
       </div>
+      <DeleteModal
+        isOpen={deleteModal.open}
+        title="Remove Item?"
+        message={`Are you sure you want to remove this ${
+          deleteModal.field === 'introParagraphs' ? 'paragraph' :
+          deleteModal.field === 'quantities' ? 'pricing option' :
+          deleteModal.field === 'paymentMethods' ? 'payment method' :
+          deleteModal.field === 'pickupDates' ? 'pickup date' :
+          'term'
+        }?`}
+        confirmText="Yes, Remove"
+        onConfirm={() => {
+          removeArrayItem(deleteModal.field, deleteModal.index);
+          setDeleteModal({ open: false, field: '', index: null });
+        }}
+        onCancel={() => setDeleteModal({ open: false, field: '', index: null })}
+      />
     </div>
   );
 };
+
+/* ===================== QUOTES PANEL ===================== */
+
+const QUOTE_STATUSES = ['all', 'new', 'quoted', 'accepted', 'declined', 'completed', 'archived'];
+
+const QUOTE_STATUS_COLORS = {
+  new: '#D4A017',
+  quoted: '#3B82F6',
+  accepted: '#4A7C59',
+  declined: '#C0392B',
+  completed: '#6B7280',
+  archived: '#9CA3AF',
+};
+
+const QUOTE_EVENT_LABELS = {
+  wedding: 'Wedding',
+  corporate: 'Corporate',
+  fundraiser: 'Fundraiser',
+  birthday: 'Birthday',
+  'baby-shower': 'Baby Shower',
+  holiday: 'Holiday',
+  other: 'Other',
+};
+
+const QuotesPanel = () => {
+  const [quotes, setQuotes] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [statusFilter, setStatusFilter] = useState('all');
+  const [search, setSearch] = useState('');
+  const [expandedId, setExpandedId] = useState(null);
+  const [quoteForm, setQuoteForm] = useState({});
+  const [message, setMessage] = useState('');
+  const [sending, setSending] = useState(false);
+  const [deleteModal, setDeleteModal] = useState({ open: false, quoteId: null, customerName: '' });
+
+  const fetchQuotes = async () => {
+    try {
+      const params = {};
+      if (statusFilter !== 'all') params.status = statusFilter;
+      if (search) params.search = search;
+      const { data } = await api.get('/quotes', { params });
+      setQuotes(data);
+    } catch {
+      setQuotes([]);
+    }
+    setLoading(false);
+  };
+
+  useEffect(() => {
+    fetchQuotes();
+    const interval = setInterval(fetchQuotes, 20000);
+    return () => clearInterval(interval);
+  }, [statusFilter, search]);
+
+  const toggleExpand = (quote) => {
+    if (expandedId === quote._id) {
+      setExpandedId(null);
+      return;
+    }
+    setExpandedId(quote._id);
+    setQuoteForm({
+      items: quote.quote?.items?.length ? [...quote.quote.items] : [{ name: 'Custom Cookies', unitLabel: 'cookie', quantity: quote.guestCount || 1, pricePerUnit: '' }],
+      isItemized: quote.quote?.isItemized || false,
+      fees: quote.quote?.fees || 0,
+      notes: quote.quote?.notes || '',
+      validUntil: quote.quote?.validUntil || '',
+    });
+    setMessage('');
+  };
+
+  const updateStatus = async (id, status) => {
+    try {
+      await api.patch(`/quotes/${id}/status`, { status });
+      fetchQuotes();
+    } catch { /* ignore */ }
+  };
+
+  const sendQuote = async (id) => {
+    setSending(true);
+    setMessage('');
+    try {
+      const res = await api.post(`/quotes/${id}/send-quote`, quoteForm);
+      setMessage(res.data.emailSent ? 'Quote sent to customer.' : 'Saved, but email failed.');
+      fetchQuotes();
+    } catch (err) {
+      setMessage(err.response?.data?.message || 'Failed to send quote.');
+    } finally {
+      setSending(false);
+    }
+  };
+
+  const deleteQuote = async (id) => {
+    try {
+      await api.delete(`/quotes/${id}`);
+      fetchQuotes();
+      setExpandedId(null);
+    } catch { /* ignore */ }
+  };
+
+  const money = (n) => (typeof n === 'number' && !isNaN(n) ? `$${n.toFixed(2)}` : '—');
+
+  const subtotal = quoteForm.items?.reduce((acc, item) => acc + (Number(item.pricePerUnit) * Number(item.quantity) || 0), 0) || 0;
+  const total = subtotal + Number(quoteForm.fees || 0);
+  const isValidToSubmit = quoteForm.items?.length > 0 && quoteForm.items.every(i => (!quoteForm.isItemized || i.name) && Number(i.pricePerUnit) > 0 && Number(i.quantity) > 0);
+
+  const counts = quotes.reduce((acc, q) => {
+    acc[q.status] = (acc[q.status] || 0) + 1;
+    return acc;
+  }, {});
+
+  const formatDate = (d) =>
+    new Date(d).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+
+  return (
+    <>
+      <div className={styles.filters}>
+        <div className={styles.searchWrap}>
+          <FaSearch className={styles.searchIcon} aria-hidden />
+          <input
+            type="text"
+            placeholder="Search by name, email, org, event…"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            className={styles.searchInput}
+          />
+        </div>
+        <div className={styles.statusFilters}>
+          {QUOTE_STATUSES.map((s) => (
+            <button
+              key={s}
+              className={`${styles.filterBtn} ${statusFilter === s ? styles.filterActive : ''}`}
+              onClick={() => setStatusFilter(s)}
+            >
+              {s.charAt(0).toUpperCase() + s.slice(1)}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      <div className={styles.stats}>
+        <div className={styles.statCard}>
+          <span className={styles.statNum}>{quotes.length}</span>
+          <span className={styles.statLabel}>
+            {statusFilter === 'all' ? 'Total Quotes' : `${statusFilter} Quotes`}
+          </span>
+        </div>
+        <div className={styles.statCard}>
+          <span className={styles.statNum}>{counts.new || 0}</span>
+          <span className={styles.statLabel}>New Requests</span>
+        </div>
+        <div className={styles.statCard}>
+          <span className={styles.statNum}>{counts.quoted || 0}</span>
+          <span className={styles.statLabel}>Awaiting Response</span>
+        </div>
+        <div className={styles.statCard}>
+          <span className={styles.statNum}>{counts.accepted || 0}</span>
+          <span className={styles.statLabel}>Accepted</span>
+        </div>
+        <div className={styles.statCard}>
+          <span className={styles.statNum}>{counts.declined || 0}</span>
+          <span className={styles.statLabel}>Declined</span>
+        </div>
+        <div className={styles.statCard}>
+          <span className={styles.statNum}>{counts.confirmed || 0}</span>
+          <span className={styles.statLabel}>Confirmed</span>
+        </div>
+        <div className={styles.statCard}>
+          <span className={styles.statNum}>{counts.completed || 0}</span>
+          <span className={styles.statLabel}>Completed</span>
+        </div>
+        <div className={styles.statCard}>
+          <span className={styles.statNum}>{counts.cancelled || 0}</span>
+          <span className={styles.statLabel}>Cancelled</span>
+        </div>
+      </div>
+
+      {loading ? (
+        <p className={styles.loadingText}>Loading quotes...</p>
+      ) : quotes.length === 0 ? (
+        <p className={styles.emptyText}>No quote requests found.</p>
+      ) : (
+        <div className={styles.orderList}>
+          {quotes.map((quote) => (
+            <div key={quote._id} className={styles.orderCard}>
+              <div className={styles.orderHeader} onClick={() => toggleExpand(quote)}>
+                <div className={styles.orderInfo}>
+                  <h3>
+                    <span className={styles.orderIdInline}>
+                      {QUOTE_EVENT_LABELS[quote.eventType] || 'Event'}
+                    </span>{' '}
+                    {quote.customerName}
+                    {quote.organization ? ` · ${quote.organization}` : ''}
+                  </h3>
+                  <span className={styles.orderContact}>
+                    {quote.contactEmail} | {quote.contactPhone} · {quote.guestCount} guests
+                  </span>
+                </div>
+                <div className={styles.orderMeta}>
+                  <span
+                    className={styles.statusBadge}
+                    style={{ background: QUOTE_STATUS_COLORS[quote.status] }}
+                  >
+                    {quote.status}
+                  </span>
+                  <span className={styles.orderDate}>{formatDate(quote.createdAt)}</span>
+                </div>
+              </div>
+
+              {expandedId === quote._id && (
+                <div className={styles.orderDetails}>
+                  <div className={styles.detailGrid}>
+                    <div>
+                      <strong>Name:</strong>
+                      <p>{quote.customerName}</p>
+                    </div>
+                    <div>
+                      <strong>Email:</strong>
+                      <p><a href={`mailto:${quote.contactEmail}`}>{quote.contactEmail}</a></p>
+                    </div>
+                    <div>
+                      <strong>Phone:</strong>
+                      <p><a href={`tel:${quote.contactPhone}`}>{quote.contactPhone}</a></p>
+                    </div>
+                    {quote.organization && (
+                      <div>
+                        <strong>Organization:</strong>
+                        <p>{quote.organization}</p>
+                      </div>
+                    )}
+                    <div>
+                      <strong>Event:</strong>
+                      <p>{QUOTE_EVENT_LABELS[quote.eventType]}{quote.eventTypeOther ? ` — ${quote.eventTypeOther}` : ''}</p>
+                    </div>
+                    {quote.eventName && (
+                      <div>
+                        <strong>Event Name:</strong>
+                        <p>{quote.eventName}</p>
+                      </div>
+                    )}
+                    <div>
+                      <strong>Date:</strong>
+                      <p>{quote.eventDate || '—'}{quote.dateFlexible ? ' (flexible)' : ''}</p>
+                    </div>
+                    <div>
+                      <strong>Guests:</strong>
+                      <p>{quote.guestCount}</p>
+                    </div>
+                    <div>
+                      <strong>Fulfillment:</strong>
+                      <p style={{ textTransform: 'capitalize' }}>{quote.fulfillment}</p>
+                    </div>
+                    {quote.budgetRange && (
+                      <div>
+                        <strong>Budget:</strong>
+                        <p>{quote.budgetRange}</p>
+                      </div>
+                    )}
+                    {quote.flavors?.length > 0 && (
+                      <div className={styles.detailFull}>
+                        <strong>Flavors:</strong>
+                        <p>{quote.flavors.join(', ')}</p>
+                      </div>
+                    )}
+                    {quote.flavorNotes && (
+                      <div className={styles.detailFull}>
+                        <strong>Flavor Notes:</strong>
+                        <p>{quote.flavorNotes}</p>
+                      </div>
+                    )}
+                    {quote.deliveryAddress && (
+                      <div className={styles.detailFull}>
+                        <strong>Delivery Address:</strong>
+                        <p>{quote.deliveryAddress}</p>
+                      </div>
+                    )}
+                    {quote.details && (
+                      <div className={styles.detailFull}>
+                        <strong>Details:</strong>
+                        <p>{quote.details}</p>
+                      </div>
+                    )}
+                    {quote.referral && (
+                      <div>
+                        <strong>Heard via:</strong>
+                        <p>{quote.referral}</p>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Quote builder */}
+                  {(quote.status === 'new' || quote.status === 'quoted') && (
+                    <div className={styles.quoteBuilderCard}>
+                      <h4 className={styles.quoteBuilderHeader}>
+                        {quote.status === 'quoted' ? 'Update Quote' : 'Build Quote'}
+                      </h4>
+                      <div className={styles.modeToggle}>
+                        <button
+                          type="button"
+                          className={`${styles.modeBtn} ${!quoteForm.isItemized ? styles.modeBtnActive : ''}`}
+                          onClick={() => setQuoteForm({ ...quoteForm, isItemized: false })}
+                        >
+                          Simple Quote
+                        </button>
+                        <button
+                          type="button"
+                          className={`${styles.modeBtn} ${quoteForm.isItemized ? styles.modeBtnActive : ''}`}
+                          onClick={() => setQuoteForm({ ...quoteForm, isItemized: true })}
+                        >
+                          Advanced (Itemized)
+                        </button>
+                      </div>
+
+                      {quoteForm.isItemized ? (
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', marginBottom: '20px' }}>
+                          {quoteForm.items?.map((item, idx) => (
+                            <div key={idx} style={{ display: 'flex', gap: '12px', alignItems: 'flex-start', flexWrap: 'wrap', background: 'var(--color-ivory)', padding: '16px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--color-border-light)' }}>
+                              <div style={{ flex: '2 1 160px' }}>
+                                <strong>Item Name</strong>
+                                <input
+                                  type="text"
+                                  value={item.name}
+                                  onChange={(e) => {
+                                    const newItems = [...quoteForm.items];
+                                    newItems[idx].name = e.target.value;
+                                    setQuoteForm({ ...quoteForm, items: newItems });
+                                  }}
+                                  className={styles.quoteBuilderInput}
+                                  placeholder="e.g. Custom Cookies"
+                                />
+                              </div>
+                              <div style={{ flex: '1 1 80px' }}>
+                                <strong>Price ($)</strong>
+                                <input
+                                  type="number" step="0.01" min="0"
+                                  value={item.pricePerUnit}
+                                  onChange={(e) => {
+                                    const newItems = [...quoteForm.items];
+                                    newItems[idx].pricePerUnit = e.target.value;
+                                    setQuoteForm({ ...quoteForm, items: newItems });
+                                  }}
+                                  className={styles.quoteBuilderInput}
+                                />
+                              </div>
+                              <div style={{ flex: '1 1 80px' }}>
+                                <strong>Quantity</strong>
+                                <input
+                                  type="number" min="1"
+                                  value={item.quantity}
+                                  onChange={(e) => {
+                                    const newItems = [...quoteForm.items];
+                                    newItems[idx].quantity = e.target.value;
+                                    setQuoteForm({ ...quoteForm, items: newItems });
+                                  }}
+                                  className={styles.quoteBuilderInput}
+                                />
+                              </div>
+                              <div style={{ flex: '1 1 80px' }}>
+                                <strong>Unit Label</strong>
+                                <input
+                                  type="text"
+                                  value={item.unitLabel}
+                                  onChange={(e) => {
+                                    const newItems = [...quoteForm.items];
+                                    newItems[idx].unitLabel = e.target.value;
+                                    setQuoteForm({ ...quoteForm, items: newItems });
+                                  }}
+                                  className={styles.quoteBuilderInput}
+                                  placeholder="e.g. cookie"
+                                />
+                              </div>
+                              {quoteForm.items.length > 1 && (
+                                <button
+                                  type="button"
+                                  className={styles.cancelBtn}
+                                  style={{ marginTop: '24px', padding: '10px 12px' }}
+                                  onClick={() => {
+                                    const newItems = quoteForm.items.filter((_, i) => i !== idx);
+                                    setQuoteForm({ ...quoteForm, items: newItems });
+                                  }}
+                                >
+                                  <FaTrash />
+                                </button>
+                              )}
+                            </div>
+                          ))}
+                          <button
+                            type="button"
+                            className={styles.completeBtn}
+                            style={{ alignSelf: 'flex-start' }}
+                            onClick={() => setQuoteForm({
+                              ...quoteForm,
+                              items: [...(quoteForm.items || []), { name: '', unitLabel: 'unit', quantity: 1, pricePerUnit: '' }]
+                            })}
+                          >
+                            + Add Item
+                          </button>
+                        </div>
+                      ) : (
+                        <div className={styles.quoteBuilderForm}>
+                          <div>
+                            <strong>Price per unit ($)</strong>
+                            <input
+                              type="number" step="0.01" min="0"
+                              value={quoteForm.items?.[0]?.pricePerUnit || ''}
+                              onChange={(e) => {
+                                const newItems = [...(quoteForm.items || [])];
+                                if (!newItems[0]) newItems[0] = { name: 'Custom Cookies', unitLabel: 'cookie', quantity: 1, pricePerUnit: '' };
+                                newItems[0].pricePerUnit = e.target.value;
+                                setQuoteForm({ ...quoteForm, items: newItems });
+                              }}
+                              className={styles.quoteBuilderInput}
+                            />
+                          </div>
+                          <div>
+                            <strong>Quantity</strong>
+                            <input
+                              type="number" min="1"
+                              value={quoteForm.items?.[0]?.quantity || ''}
+                              onChange={(e) => {
+                                const newItems = [...(quoteForm.items || [])];
+                                if (!newItems[0]) newItems[0] = { name: 'Custom Cookies', unitLabel: 'cookie', quantity: 1, pricePerUnit: '' };
+                                newItems[0].quantity = e.target.value;
+                                setQuoteForm({ ...quoteForm, items: newItems });
+                              }}
+                              className={styles.quoteBuilderInput}
+                            />
+                          </div>
+                          <div>
+                            <strong>Unit Label</strong>
+                            <input
+                              type="text"
+                              value={quoteForm.items?.[0]?.unitLabel || ''}
+                              onChange={(e) => {
+                                const newItems = [...(quoteForm.items || [])];
+                                if (!newItems[0]) newItems[0] = { name: 'Custom Cookies', unitLabel: 'cookie', quantity: 1, pricePerUnit: '' };
+                                newItems[0].unitLabel = e.target.value;
+                                setQuoteForm({ ...quoteForm, items: newItems });
+                              }}
+                              className={styles.quoteBuilderInput}
+                              placeholder="e.g. cookie"
+                            />
+                          </div>
+                        </div>
+                      )}
+
+                      <div className={styles.quoteBuilderForm}>
+                        <div>
+                          <strong>Additional Fees ($)</strong>
+                          <input
+                            type="number" step="0.01" min="0"
+                            value={quoteForm.fees}
+                            onChange={(e) => setQuoteForm({ ...quoteForm, fees: e.target.value })}
+                            className={styles.quoteBuilderInput}
+                          />
+                        </div>
+                        <div>
+                          <strong>Valid Until</strong>
+                          <input
+                            type="date"
+                            value={quoteForm.validUntil}
+                            onChange={(e) => setQuoteForm({ ...quoteForm, validUntil: e.target.value })}
+                            className={styles.quoteBuilderInput}
+                          />
+                        </div>
+                        <div className={styles.detailFull}>
+                          <strong>Notes to customer</strong>
+                          <textarea
+                            rows="2"
+                            value={quoteForm.notes}
+                            onChange={(e) => setQuoteForm({ ...quoteForm, notes: e.target.value })}
+                            className={styles.quoteBuilderInput}
+                          />
+                        </div>
+                      </div>
+
+                      <div className={styles.quoteBuilderSummary}>
+                        <div>
+                          <div className={styles.quoteBuilderSubtotal}>
+                            Subtotal: <strong>{money(subtotal)}</strong> + Fees: <strong>{money(Number(quoteForm.fees) || 0)}</strong>
+                          </div>
+                          <div className={styles.quoteBuilderTotal}>
+                            Total: {money(total)}
+                          </div>
+                        </div>
+                        <button
+                          className={styles.confirmBtn}
+                          onClick={() => sendQuote(quote._id)}
+                          disabled={sending || !isValidToSubmit}
+                        >
+                          <FaPaperPlane /> {sending ? 'Sending…' : quote.status === 'quoted' ? 'Resend Quote' : 'Send Quote'}
+                        </button>
+                      </div>
+
+                      {message && (
+                        <p style={{ marginTop: 10, fontSize: '0.9rem', color: 'var(--color-text-muted)' }}>{message}</p>
+                      )}
+                    </div>
+                  )}
+
+                  {/* Sent-quote snapshot */}
+                  {quote.quote?.items?.length > 0 && quote.status !== 'new' && (
+                    <div className={styles.quoteSentSnapshot}>
+                      <span className={styles.quoteSentTotal}>
+                        Sent Quote: {money(quote.quote.total)}
+                      </span>
+                      {quote.quote.isItemized ? (
+                        quote.quote.items.map((item, idx) => (
+                          <p key={idx} className={styles.quoteSentDetails} style={{ margin: 0 }}>
+                            {item.quantity} × {item.name} ({item.unitLabel}) @ {money(item.pricePerUnit)}
+                          </p>
+                        ))
+                      ) : (
+                        <p className={styles.quoteSentDetails} style={{ margin: 0 }}>
+                          {quote.quote.items[0].quantity} × {quote.quote.items[0].unitLabel} @ {money(quote.quote.items[0].pricePerUnit)} each
+                        </p>
+                      )}
+                      <p className={styles.quoteSentDetails} style={{ marginTop: 6, fontSize: '0.8rem', borderTop: '1px solid rgba(106, 22, 32, 0.1)', paddingTop: 6 }}>
+                        {quote.quote.sentAt && `Sent ${formatDate(quote.quote.sentAt)}`}
+                        {quote.quote.respondedAt && ` · ${quote.status} on ${formatDate(quote.quote.respondedAt)}`}
+                      </p>
+                    </div>
+                  )}
+
+                  <div className={styles.orderActions} style={{ marginTop: 20 }}>
+                    {quote.status !== 'completed' && quote.status !== 'archived' && (
+                      <>
+                        {quote.status === 'accepted' && (
+                          <button className={styles.completeBtn} onClick={() => updateStatus(quote._id, 'completed')}>
+                            Mark Completed
+                          </button>
+                        )}
+                        <button className={styles.undoBtn} onClick={() => updateStatus(quote._id, 'archived')}>
+                          Archive
+                        </button>
+                      </>
+                    )}
+                    {(quote.status === 'archived' || quote.status === 'completed') && (
+                      <button className={styles.undoBtn} onClick={() => updateStatus(quote._id, 'new')}>
+                        <FaUndo /> Reopen
+                      </button>
+                    )}
+                    <button className={styles.cancelBtn} onClick={() => setDeleteModal({ open: true, quoteId: quote._id, customerName: quote.customerName })}>
+                      <FaTrash /> Delete
+                    </button>
+                  </div>
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
+      )}
+
+      <DeleteModal
+        isOpen={deleteModal.open}
+        title="Delete Quote?"
+        message={<>Are you sure you want to delete the quote request from <strong>{deleteModal.customerName}</strong>? This action cannot be undone.</>}
+        confirmText="Yes, Delete Quote"
+        onConfirm={() => {
+          deleteQuote(deleteModal.quoteId);
+          setDeleteModal({ open: false, quoteId: null, customerName: '' });
+        }}
+        onCancel={() => setDeleteModal({ open: false, quoteId: null, customerName: '' })}
+      />
+    </>
+  );
+};
+
+/* ===================== INSIGHTS PANEL ===================== */
+
+const RANGE_OPTIONS = [
+  { months: 6, label: '6 mo' },
+  { months: 12, label: '12 mo' },
+  { months: 24, label: '24 mo' },
+];
+
+const InsightsPanel = () => {
+  const [orderStats, setOrderStats] = useState(null);
+  const [quoteStats, setQuoteStats] = useState(null);
+  const [range, setRange] = useState(12);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    setLoading(true);
+    Promise.all([
+      api.get(`/orders/stats/monthly?months=${range}`).then((r) => r.data).catch(() => null),
+      api.get(`/quotes/stats/monthly?months=${range}`).then((r) => r.data).catch(() => null),
+    ]).then(([o, q]) => {
+      setOrderStats(o);
+      setQuoteStats(q);
+      setLoading(false);
+    });
+  }, [range]);
+
+  const sumKey = (series, key) => (series || []).reduce((acc, d) => acc + (d[key] || 0), 0);
+
+  const totalOrders = sumKey(orderStats?.series, 'count');
+  const totalQuotes = sumKey(quoteStats?.series, 'count');
+  const totalRevenue = sumKey(quoteStats?.series, 'revenue');
+  const acceptedQuotes = sumKey(quoteStats?.series, 'accepted');
+  const acceptRate = totalQuotes ? Math.round((acceptedQuotes / totalQuotes) * 100) : 0;
+
+  const lastMonth = orderStats?.series?.[orderStats.series.length - 1];
+  const prevMonth = orderStats?.series?.[orderStats.series.length - 2];
+  const orderTrend = lastMonth && prevMonth
+    ? lastMonth.count - prevMonth.count
+    : 0;
+
+  const lastQ = quoteStats?.series?.[quoteStats.series.length - 1];
+  const prevQ = quoteStats?.series?.[quoteStats.series.length - 2];
+  const quoteTrend = lastQ && prevQ ? lastQ.count - prevQ.count : 0;
+
+  return (
+    <>
+      <div className={styles.filters}>
+        <div className={styles.statusFilters} style={{ marginLeft: 'auto' }}>
+          {RANGE_OPTIONS.map((r) => (
+            <button
+              key={r.months}
+              className={`${styles.filterBtn} ${range === r.months ? styles.filterActive : ''}`}
+              onClick={() => setRange(r.months)}
+            >
+              {r.label}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      <div className={styles.stats}>
+        <div className={styles.statCard}>
+          <span className={styles.statNum}>{totalOrders}</span>
+          <span className={styles.statLabel}>
+            Orders · last {range} mo
+            {orderTrend !== 0 && (
+              <span style={{ marginLeft: 6, color: orderTrend > 0 ? 'var(--color-success, #4A7C59)' : 'var(--color-danger, #C0392B)' }}>
+                {orderTrend > 0 ? `▲ ${orderTrend}` : `▼ ${Math.abs(orderTrend)}`}
+              </span>
+            )}
+          </span>
+        </div>
+        <div className={styles.statCard}>
+          <span className={styles.statNum}>{totalQuotes}</span>
+          <span className={styles.statLabel}>
+            Quotes · last {range} mo
+            {quoteTrend !== 0 && (
+              <span style={{ marginLeft: 6, color: quoteTrend > 0 ? 'var(--color-success, #4A7C59)' : 'var(--color-danger, #C0392B)' }}>
+                {quoteTrend > 0 ? `▲ ${quoteTrend}` : `▼ ${Math.abs(quoteTrend)}`}
+              </span>
+            )}
+          </span>
+        </div>
+        <div className={styles.statCard}>
+          <span className={styles.statNum}>{acceptRate}%</span>
+          <span className={styles.statLabel}>Quote Accept Rate</span>
+        </div>
+        <div className={styles.statCard}>
+          <span className={styles.statNum}>${Math.round(totalRevenue).toLocaleString()}</span>
+          <span className={styles.statLabel}>Quote Revenue · accepted</span>
+        </div>
+      </div>
+
+      {loading ? (
+        <p className={styles.loadingText}>Loading insights...</p>
+      ) : (
+        <>
+          <div className={styles.orderCard} style={{ padding: 24, marginBottom: 18 }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 14, flexWrap: 'wrap', gap: 8 }}>
+              <div>
+                <h3 style={{ margin: 0, fontFamily: 'var(--font-heading)', color: 'var(--color-maroon)', fontWeight: 500 }}>
+                  Pre-Orders by Month
+                </h3>
+                <p style={{ margin: '4px 0 0', color: 'var(--color-text-muted)', fontSize: '0.88rem' }}>
+                  Stacked by status — hover bars for breakdown.
+                </p>
+              </div>
+              <ChartLegend
+                items={[
+                  { label: 'Pending', color: '#C9A876' },
+                  { label: 'Confirmed', color: '#4A7C59' },
+                  { label: 'Completed', color: '#7A6B6B' },
+                  { label: 'Cancelled', color: '#9C2A20' },
+                ]}
+              />
+            </div>
+            <MonthlyChart
+              data={orderStats?.series || []}
+              mode="stacked"
+              stacks={['pending', 'confirmed', 'completed', 'cancelled']}
+              height={240}
+              yLabel="Orders"
+            />
+          </div>
+
+          <div className={styles.orderCard} style={{ padding: 24, marginBottom: 18 }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 14, flexWrap: 'wrap', gap: 8 }}>
+              <div>
+                <h3 style={{ margin: 0, fontFamily: 'var(--font-heading)', color: 'var(--color-maroon)', fontWeight: 500 }}>
+                  Quote Requests by Month
+                </h3>
+                <p style={{ margin: '4px 0 0', color: 'var(--color-text-muted)', fontSize: '0.88rem' }}>
+                  How many groups, weddings, and corporate events are reaching out each month.
+                </p>
+              </div>
+            </div>
+            <MonthlyChart
+              data={quoteStats?.series || []}
+              valueKey="count"
+              mode="line"
+              height={240}
+              yLabel="Requests"
+            />
+          </div>
+
+          <div className={styles.orderCard} style={{ padding: 24 }}>
+            <div style={{ marginBottom: 14 }}>
+              <h3 style={{ margin: 0, fontFamily: 'var(--font-heading)', color: 'var(--color-maroon)', fontWeight: 500 }}>
+                Quote Revenue by Month
+              </h3>
+              <p style={{ margin: '4px 0 0', color: 'var(--color-text-muted)', fontSize: '0.88rem' }}>
+                Total of accepted &amp; completed quotes.
+              </p>
+            </div>
+            <MonthlyChart
+              data={quoteStats?.series || []}
+              valueKey="revenue"
+              mode="bar"
+              height={240}
+              yLabel="USD"
+              formatValue={(v) => `$${Math.round(v).toLocaleString()}`}
+            />
+          </div>
+        </>
+      )}
+    </>
+  );
+};
+
+const ChartLegend = ({ items }) => (
+  <div style={{ display: 'flex', gap: 14, flexWrap: 'wrap' }}>
+    {items.map((it) => (
+      <div key={it.label} style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: '0.78rem', color: 'var(--color-text-muted)' }}>
+        <span style={{ display: 'inline-block', width: 10, height: 10, background: it.color, borderRadius: 2 }} />
+        {it.label}
+      </div>
+    ))}
+  </div>
+);
 
 export default AdminDashboard;

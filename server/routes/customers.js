@@ -167,4 +167,19 @@ router.get('/:id/orders', auth, async (req, res) => {
   }
 });
 
+// Admin: Delete a customer
+router.delete('/:id', auth, async (req, res) => {
+  try {
+    const customer = await Customer.findByIdAndDelete(req.params.id);
+    if (!customer) return res.status(404).json({ message: 'Customer not found' });
+    
+    // Also remove customer ID from their orders
+    await Order.updateMany({ customer: req.params.id }, { $set: { customer: null } });
+    
+    res.json({ message: 'Customer deleted successfully' });
+  } catch (err) {
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
 module.exports = router;

@@ -206,6 +206,57 @@ router.get('/track/:orderNumber', async (req, res) => {
   }
 });
 
+// Admin: monthly stats for the last N months (default 12)
+router.get('/stats/monthly', auth, async (req, res) => {
+  try {
+    const months = Math.max(1, Math.min(24, Number(req.query.months) || 12));
+    const start = new Date();
+    start.setMonth(start.getMonth() - (months - 1), 1);
+    start.setHours(0, 0, 0, 0);
+
+    const rows = await Order.aggregate([
+      { $match: { createdAt: { $gte: start } } },
+      {
+        $group: {
+          _id: { y: { $year: '$createdAt' }, m: { $month: '$createdAt' } },
+          count: { $sum: 1 },
+          confirmed: { $sum: { $cond: [{ $eq: ['$status', 'confirmed'] }, 1, 0] } },
+          completed: { $sum: { $cond: [{ $eq: ['$status', 'completed'] }, 1, 0] } },
+          cancelled: { $sum: { $cond: [{ $eq: ['$status', 'cancelled'] }, 1, 0] } },
+          pending: { $sum: { $cond: [{ $eq: ['$status', 'pending'] }, 1, 0] } },
+        },
+      },
+      { $sort: { '_id.y': 1, '_id.m': 1 } },
+    ]);
+
+    // Build a complete series even for empty months
+    const series = [];
+    const cursor = new Date(start);
+    for (let i = 0; i < months; i += 1) {
+      const y = cursor.getFullYear();
+      const m = cursor.getMonth() + 1;
+      const found = rows.find((r) => r._id.y === y && r._id.m === m);
+      series.push({
+        year: y,
+        month: m,
+        label: cursor.toLocaleDateString('en-US', { month: 'short' }),
+        count: found?.count || 0,
+        confirmed: found?.confirmed || 0,
+        completed: found?.completed || 0,
+        cancelled: found?.cancelled || 0,
+        pending: found?.pending || 0,
+      });
+      cursor.setMonth(cursor.getMonth() + 1);
+    }
+
+    const totalAll = await Order.countDocuments();
+    res.json({ months, series, totalAll });
+  } catch (err) {
+    console.error('Order stats error:', err);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
 // Admin: Get all orders
 router.get('/', auth, async (req, res) => {
   try {

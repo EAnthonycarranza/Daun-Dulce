@@ -24,10 +24,8 @@
   display: flex;
   align-items: center;
   gap: 14px;
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
   transition: var(--transition);
+  z-index: 10;
 }
 
 .logo:hover {
@@ -48,30 +46,62 @@
 .leftLinks {
   display: flex;
   align-items: center;
-  gap: 4px;
+  justify-content: flex-end;
+  gap: 8px;
   list-style: none;
+  flex: 1;
+}
+
+.rightLinks {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 8px;
+  list-style: none;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  margin: 0 40px;
+  transition: var(--transition);
+  z-index: 10;
 }
 
 .rightActions {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 16px;
+  margin-left: auto;
+  flex-shrink: 0;
+}
+
+/* Container for grouping right links and actions */
+.rightSide {
+  display: flex;
+  align-items: center;
+  flex: 1;
+  min-width: 0;
+  gap: 20px;
 }
 
 .leftLinks a,
+.rightLinks a,
 .navLinks a {
   color: var(--color-text-dark);
   font-family: var(--font-body);
-  font-size: 0.74rem;
+  font-size: 0.72rem;
   font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: var(--letter-wide);
-  padding: 10px 18px;
+  letter-spacing: 0.12em;
+  padding: 10px 14px;
   transition: var(--transition);
   position: relative;
+  white-space: nowrap;
 }
 
 .leftLinks a::after,
+.rightLinks a::after,
 .navLinks a:not(.orderBtn):not(.accountBtn)::after {
   content: '';
   position: absolute;
@@ -86,34 +116,39 @@
 
 @media (hover: hover) {
   .leftLinks a:hover::after,
+  .rightLinks a:hover::after,
   .navLinks a:not(.orderBtn):not(.accountBtn):hover::after {
-    width: calc(100% - 36px);
+    width: calc(100% - 40px);
   }
 
   .leftLinks a:hover,
+  .rightLinks a:hover,
   .navLinks a:not(.orderBtn):not(.accountBtn):hover {
     color: var(--color-maroon);
   }
 }
 
 .leftLinks a.active,
+.rightLinks a.active,
 .navLinks a.active {
   color: var(--color-maroon);
 }
 
 .leftLinks a.active::after,
+.rightLinks a.active::after,
 .navLinks a.active::after {
-  width: calc(100% - 36px) !important;
+  width: calc(100% - 40px) !important;
   background: var(--color-maroon);
 }
 
 .orderBtn {
   background: var(--color-maroon) !important;
   color: var(--color-cream) !important;
-  padding: 11px 22px !important;
+  padding: 11px 24px !important;
   border-radius: 2px !important;
   border: 1px solid var(--color-maroon);
   transition: var(--transition) !important;
+  white-space: nowrap;
 }
 
 .orderBtn:hover {
@@ -131,8 +166,9 @@
   align-items: center;
   gap: 8px;
   color: var(--color-text-muted) !important;
-  font-size: 0.7rem !important;
+  font-size: 0.72rem !important;
   padding: 8px 14px !important;
+  white-space: nowrap;
 }
 
 .accountBtn:hover {
@@ -213,8 +249,6 @@
   }
 
   .logo {
-    position: static;
-    transform: none;
     margin-right: auto;
   }
 
@@ -226,7 +260,8 @@
     display: flex;
   }
 
-  .leftLinks {
+  .leftLinks,
+  .rightLinks {
     display: none;
   }
 
@@ -341,6 +376,7 @@
   }
 
   .rightActions {
+    position: static;
     margin-left: auto;
     gap: 8px;
   }

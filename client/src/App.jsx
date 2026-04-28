@@ -17,6 +17,8 @@ import AdminDashboard from './pages/AdminDashboard';
 import ConfirmOrder from './pages/ConfirmOrder';
 import TrackOrder from './pages/TrackOrder';
 import NotFound from './pages/NotFound';
+import GroupQuote from './pages/GroupQuote';
+import QuoteResponse from './pages/QuoteResponse';
 
 const ProtectedRoute = ({ children }) => {
   const { token, loading } = useAuth();
@@ -51,6 +53,8 @@ const App = () => {
               <Route path="/pre-order" element={<PreOrder />} />
               <Route path="/confirm-order/:token" element={<ConfirmOrder />} />
               <Route path="/track-order" element={<TrackOrder />} />
+              <Route path="/group-quote" element={<GroupQuote />} />
+              <Route path="/quote-response/:token" element={<QuoteResponse />} />
               <Route path="/login" element={<CustomerLogin />} />
               <Route path="/register" element={<CustomerRegister />} />
               <Route

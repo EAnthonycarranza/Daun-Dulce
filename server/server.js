@@ -12,6 +12,7 @@ const cookieRoutes = require('./routes/cookies');
 const eventRoutes = require('./routes/events');
 const customerRoutes = require('./routes/customers');
 const siteContentRoutes = require('./routes/siteContent');
+const quoteRoutes = require('./routes/quotes');
 const { startBot: startTelegramBot } = require('./utils/telegramBot');
 
 const app = express();
@@ -41,6 +42,7 @@ app.use('/api/cookies', cookieRoutes);
 app.use('/api/events', eventRoutes);
 app.use('/api/customers', customerRoutes);
 app.use('/api/site-content', siteContentRoutes);
+app.use('/api/quotes', quoteRoutes);
 
 // Health check
 app.get('/api/health', (req, res) => {

@@ -35,6 +35,7 @@ const PreOrder = () => {
           flavorOther: '',
           paymentMethod: '',
           pickupDate: '',
+          pickupDateOther: '',
           terms: Array(contentRes.data.terms.length).fill(false),
           specialRequests: '',
         });
@@ -89,7 +90,7 @@ const PreOrder = () => {
     if (form.quantity === 'Other' && !form.quantityOther.trim()) return false;
     if (form.flavors.length === 0 && !form.flavorOther.trim()) return false;
     if (!form.paymentMethod) return false;
-    if (!form.pickupDate) return false;
+    if (form.pickupDate === 'Other' && !form.pickupDateOther?.trim()) return false;
     if (!allTermsAccepted) return false;
 
     return true;
@@ -121,7 +122,7 @@ const PreOrder = () => {
         flavors,
         flavorOther: form.flavorOther || undefined,
         paymentMethod: form.paymentMethod,
-        pickupDate: form.pickupDate,
+        pickupDate: form.pickupDate === 'Other' ? form.pickupDateOther : form.pickupDate,
         termsAccepted: true,
         specialRequests: form.specialRequests || undefined,
       };
@@ -393,7 +394,27 @@ const PreOrder = () => {
                     <span>{date}</span>
                   </label>
                 ))}
+                <label className={styles.radioLabel}>
+                  <input
+                    type="radio"
+                    name="pickupDate"
+                    value="Other"
+                    checked={form.pickupDate === 'Other'}
+                    onChange={handleChange}
+                  />
+                  <span>Other</span>
+                </label>
               </div>
+              {form.pickupDate === 'Other' && (
+                <input
+                  type="text"
+                  name="pickupDateOther"
+                  placeholder="Please specify pickup date/time"
+                  value={form.pickupDateOther || ''}
+                  onChange={handleChange}
+                  className={styles.otherInput}
+                />
+              )}
             </div>
 
             {/* Terms & Conditions */}

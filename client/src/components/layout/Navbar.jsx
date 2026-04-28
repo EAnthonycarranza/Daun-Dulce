@@ -46,38 +46,46 @@ const Navbar = () => {
         <ul className={styles.leftLinks}>
           <li><NavLink to="/" onClick={closeMenu} className={({ isActive }) => isActive ? styles.active : ''}>Home</NavLink></li>
           <li><NavLink to="/menu" onClick={closeMenu} className={({ isActive }) => isActive ? styles.active : ''}>Menu</NavLink></li>
+          <li><NavLink to="/pre-order" onClick={closeMenu} className={({ isActive }) => isActive ? styles.active : ''}>Shop</NavLink></li>
           <li><NavLink to="/events" onClick={closeMenu} className={({ isActive }) => isActive ? styles.active : ''}>Events</NavLink></li>
-          <li><NavLink to="/about" onClick={closeMenu} className={({ isActive }) => isActive ? styles.active : ''}>About</NavLink></li>
-          <li><NavLink to="/contact" onClick={closeMenu} className={({ isActive }) => isActive ? styles.active : ''}>Contact</NavLink></li>
         </ul>
 
         <Link to="/" className={styles.logo} onClick={closeMenu}>
           <img src={logo} alt="Daun Dulce" className={styles.logoImg} />
         </Link>
 
-        <div className={styles.rightActions}>
-          <NavLink
-            to={customer ? '/my-orders' : '/login'}
-            onClick={closeMenu}
-            className={styles.accountBtn}
-          >
-            <FaUser size={11} /> {customer ? 'My Orders' : 'Sign In'}
-          </NavLink>
-          <NavLink to="/pre-order" onClick={closeMenu} className={styles.orderBtn}>
-            Pre-Order
-          </NavLink>
-          <button className={styles.themeToggle} onClick={toggleTheme} aria-label="Toggle theme" title={mode === 'system' ? 'System' : mode === 'light' ? 'Light' : 'Dark'}>
-            {mode === 'system' ? <FaDesktop /> : mode === 'light' ? <FaSun /> : <FaMoon />}
-          </button>
-          <button
-            className={`${styles.hamburger} ${menuOpen ? styles.hamburgerOpen : ''}`}
-            onClick={toggleMenu}
-            aria-label={menuOpen ? 'Close menu' : 'Open menu'}
-            aria-expanded={menuOpen}
-            aria-controls="mobile-nav"
-          >
-            {menuOpen ? <FaTimes /> : <FaBars />}
-          </button>
+        <div className={styles.rightSide}>
+          <ul className={styles.rightLinks}>
+            <li><NavLink to="/group-quote" onClick={closeMenu} className={({ isActive }) => isActive ? styles.active : ''}>Quotes</NavLink></li>
+            <li><NavLink to="/track-order" onClick={closeMenu} className={({ isActive }) => isActive ? styles.active : ''}>Track</NavLink></li>
+            <li><NavLink to="/about" onClick={closeMenu} className={({ isActive }) => isActive ? styles.active : ''}>About</NavLink></li>
+            <li><NavLink to="/contact" onClick={closeMenu} className={({ isActive }) => isActive ? styles.active : ''}>Contact</NavLink></li>
+          </ul>
+
+          <div className={styles.rightActions}>
+            <NavLink
+              to={customer ? '/my-orders' : '/login'}
+              onClick={closeMenu}
+              className={styles.accountBtn}
+            >
+              <FaUser size={11} /> {customer ? 'My Orders' : 'Sign In'}
+            </NavLink>
+            <NavLink to="/pre-order" onClick={closeMenu} className={styles.orderBtn}>
+              Pre-Order
+            </NavLink>
+            <button className={styles.themeToggle} onClick={toggleTheme} aria-label="Toggle theme" title={mode === 'system' ? 'System' : mode === 'light' ? 'Light' : 'Dark'}>
+              {mode === 'system' ? <FaDesktop /> : mode === 'light' ? <FaSun /> : <FaMoon />}
+            </button>
+            <button
+              className={`${styles.hamburger} ${menuOpen ? styles.hamburgerOpen : ''}`}
+              onClick={toggleMenu}
+              aria-label={menuOpen ? 'Close menu' : 'Open menu'}
+              aria-expanded={menuOpen}
+              aria-controls="mobile-nav"
+            >
+              {menuOpen ? <FaTimes /> : <FaBars />}
+            </button>
+          </div>
         </div>
 
         <div
@@ -92,7 +100,10 @@ const Navbar = () => {
         >
           <li><NavLink to="/" onClick={closeMenu} className={({ isActive }) => isActive ? styles.active : ''}>Home</NavLink></li>
           <li><NavLink to="/menu" onClick={closeMenu} className={({ isActive }) => isActive ? styles.active : ''}>Menu</NavLink></li>
+          <li><NavLink to="/pre-order" onClick={closeMenu} className={({ isActive }) => isActive ? styles.active : ''}>Shop</NavLink></li>
           <li><NavLink to="/events" onClick={closeMenu} className={({ isActive }) => isActive ? styles.active : ''}>Events</NavLink></li>
+          <li><NavLink to="/group-quote" onClick={closeMenu} className={({ isActive }) => isActive ? styles.active : ''}>Group Quotes</NavLink></li>
+          <li><NavLink to="/track-order" onClick={closeMenu} className={({ isActive }) => isActive ? styles.active : ''}>Track Order</NavLink></li>
           <li><NavLink to="/about" onClick={closeMenu} className={({ isActive }) => isActive ? styles.active : ''}>About</NavLink></li>
           <li><NavLink to="/contact" onClick={closeMenu} className={({ isActive }) => isActive ? styles.active : ''}>Contact</NavLink></li>
           <li>

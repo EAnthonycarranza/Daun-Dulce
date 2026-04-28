@@ -358,3 +358,52 @@ a:focus-visible {
     margin-bottom: 14px;
   }
 }
+
+/* ======================================================
+   Google Places Autocomplete dropdown
+   Override the default look so it matches the brand and
+   floats above modals / sticky bars.
+   ====================================================== */
+.pac-container {
+  z-index: 99999 !important;
+  border: 1px solid var(--color-border, #E5D7C2);
+  border-top: none;
+  border-radius: 0 0 6px 6px;
+  box-shadow: 0 12px 32px -8px rgba(106, 22, 32, 0.18);
+  font-family: var(--font-body, system-ui), sans-serif;
+  background: var(--color-white, #ffffff);
+  margin-top: 2px;
+}
+.pac-item {
+  padding: 10px 14px;
+  font-size: 0.92rem;
+  color: var(--color-text-dark, #2A1A1D);
+  border-top: 1px solid var(--color-border-light, #F1E7D4);
+  cursor: pointer;
+  line-height: 1.5;
+}
+.pac-item:first-child { border-top: none; }
+.pac-item:hover,
+.pac-item-selected {
+  background: var(--color-cream-soft, #FBF3E5);
+}
+.pac-item-query {
+  color: var(--color-maroon, #6A1620);
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+.pac-matched {
+  color: var(--color-maroon, #6A1620);
+  font-weight: 700;
+}
+.pac-icon {
+  filter: hue-rotate(310deg) saturate(0.7);
+}
+.pac-logo:after {
+  filter: grayscale(0.4) opacity(0.7);
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.45; transform: scale(0.85); }
+}

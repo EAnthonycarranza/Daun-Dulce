@@ -4,7 +4,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: var(--color-maroon);
+  background: var(--color-maroon-deep);
   padding: 32px 20px;
   position: relative;
   overflow: hidden;
@@ -13,96 +13,162 @@
 .loginPage::before {
   content: '';
   position: absolute;
-  inset: 0;
+  inset: -10%;
   background:
-    radial-gradient(ellipse at top, rgba(201, 168, 118, 0.08), transparent 60%),
-    linear-gradient(180deg, var(--color-maroon) 0%, var(--color-maroon-dark) 100%);
+    radial-gradient(600px 400px at 20% 20%, rgba(201, 168, 118, 0.18), transparent 60%),
+    radial-gradient(700px 500px at 80% 80%, rgba(139, 37, 53, 0.35), transparent 60%),
+    linear-gradient(180deg, var(--color-maroon-dark) 0%, var(--color-maroon-deep) 100%);
   pointer-events: none;
+  animation: floatBg 18s ease-in-out infinite alternate;
+}
+
+.loginPage::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image:
+    repeating-linear-gradient(135deg, rgba(201, 168, 118, 0.04) 0 1px, transparent 1px 60px);
+  pointer-events: none;
+  opacity: 0.6;
+}
+
+@keyframes floatBg {
+  from { transform: translate3d(-2%, -1%, 0); }
+  to { transform: translate3d(2%, 1%, 0); }
 }
 
 .themeToggleFloat {
   position: absolute;
-  top: 20px;
-  right: 20px;
-  background: rgba(255, 255, 255, 0.15);
-  border: none;
+  top: 22px;
+  right: 22px;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(201, 168, 118, 0.25);
   color: var(--color-gold);
-  font-size: 1.1rem;
-  padding: 10px;
+  font-size: 1.05rem;
+  padding: 0;
   border-radius: 50%;
-  display: flex;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 40px;
-  height: 40px;
+  width: 42px;
+  height: 42px;
+  cursor: pointer;
   transition: var(--transition);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  z-index: 2;
 }
 
 .themeToggleFloat:hover {
-  background: rgba(255, 255, 255, 0.25);
-  transform: scale(1.1);
+  background: rgba(255, 255, 255, 0.2);
+  transform: rotate(20deg) scale(1.05);
 }
 
 .loginCard {
   background: var(--color-white);
-  padding: 50px 40px;
-  border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-lg);
+  padding: 48px 42px 40px;
+  border-radius: 20px;
+  box-shadow:
+    0 30px 80px rgba(0, 0, 0, 0.35),
+    0 0 0 1px rgba(201, 168, 118, 0.2);
   width: 100%;
-  max-width: 420px;
+  max-width: 440px;
   text-align: center;
   position: relative;
   z-index: 1;
 }
 
+.loginCard::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 20%;
+  right: 20%;
+  height: 3px;
+  background: linear-gradient(90deg, transparent, var(--color-gold), transparent);
+  border-radius: 2px;
+}
+
 .logo {
-  height: 60px;
-  margin: 0 auto 20px;
+  height: 64px;
+  margin: 0 auto 18px;
+  filter: drop-shadow(0 4px 10px rgba(42, 17, 15, 0.12));
 }
 
 .loginCard h1 {
   font-family: var(--font-heading);
-  color: var(--color-maroon);
-  font-size: 1.5rem;
-  margin-bottom: 30px;
+  color: var(--color-text-dark);
+  font-size: 1.7rem;
+  margin-bottom: 4px;
+  letter-spacing: 0.01em;
+}
+
+.loginCard h1 + .subtitle,
+.loginCard > p {
+  font-size: 0.82rem;
+  color: var(--color-text-muted);
+  margin-bottom: 28px;
+  text-transform: uppercase;
+  letter-spacing: 0.22em;
+}
+
+.loginCard h1::after {
+  content: 'Admin Console';
+  display: block;
+  font-family: var(--font-body);
+  font-size: 0.68rem;
+  color: var(--color-gold-dark);
+  font-weight: 700;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  margin-top: 8px;
+  margin-bottom: 24px;
 }
 
 .field {
-  margin-bottom: 20px;
+  margin-bottom: 16px;
   text-align: left;
 }
 
 .field label {
   display: block;
-  font-weight: 700;
+  font-weight: 600;
   margin-bottom: 6px;
-  font-size: 0.9rem;
+  font-size: 0.72rem;
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
 }
 
 .field input {
   width: 100%;
   padding: 13px 16px;
   min-height: var(--tap-target);
-  border: 2px solid var(--color-gray-light);
-  border-radius: var(--radius);
+  border: 1px solid var(--color-border);
+  background: var(--color-ivory);
+  color: var(--color-text-dark);
+  border-radius: 10px;
   transition: var(--transition);
+  font-size: 0.96rem;
 }
 
 .field input:focus {
   outline: none;
-  border-color: var(--color-maroon);
-  box-shadow: 0 0 0 3px rgba(107, 21, 32, 0.1);
+  border-color: var(--color-gold);
+  background: var(--color-white);
+  box-shadow: 0 0 0 3px rgba(201, 168, 118, 0.25);
 }
 
 .rememberMe {
   display: flex;
   align-items: center;
-  gap: 8px;
-  font-size: 0.9rem;
-  color: var(--color-gray);
+  gap: 10px;
+  font-size: 0.88rem;
+  color: var(--color-text-muted);
   cursor: pointer;
   margin-top: 4px;
-  margin-bottom: 8px;
+  margin-bottom: 18px;
+  user-select: none;
 }
 
 .rememberMe input {
@@ -115,37 +181,44 @@
   width: 100%;
   padding: 14px;
   min-height: var(--tap-target);
-  background: var(--color-maroon);
+  background: linear-gradient(135deg, var(--color-maroon), var(--color-maroon-dark));
   color: var(--color-cream);
   border: none;
-  border-radius: var(--radius);
-  font-size: 1rem;
+  border-radius: 10px;
+  font-size: 0.95rem;
   font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  cursor: pointer;
   transition: var(--transition);
-  margin-top: 8px;
+  box-shadow: 0 14px 30px -14px rgba(106, 22, 32, 0.6);
 }
 
 .submitBtn:hover:not(:disabled) {
-  background: var(--color-maroon-dark);
+  transform: translateY(-2px);
+  box-shadow: 0 18px 34px -14px rgba(106, 22, 32, 0.75);
 }
 
 .submitBtn:disabled {
   opacity: 0.6;
+  cursor: not-allowed;
 }
 
 .error {
   background: var(--color-error-bg);
   color: var(--color-danger);
-  border: 1px solid var(--color-danger);
-  padding: 10px;
-  border-radius: var(--radius);
+  border-left: 3px solid var(--color-danger);
+  padding: 12px 14px;
+  border-radius: 8px;
   margin-bottom: 20px;
-  font-size: 0.9rem;
+  font-size: 0.88rem;
+  text-align: left;
+  font-weight: 500;
 }
 
 @media (max-width: 768px) {
   .loginCard {
-    padding: 36px 28px;
+    padding: 40px 30px 32px;
   }
 }
 
@@ -155,17 +228,16 @@
   }
 
   .loginCard {
-    padding: 32px 22px;
-    border-radius: 10px;
+    padding: 34px 24px 28px;
+    border-radius: 16px;
   }
 
   .loginCard h1 {
-    font-size: 1.3rem;
-    margin-bottom: 24px;
+    font-size: 1.45rem;
   }
 
   .logo {
-    height: 48px;
+    height: 54px;
   }
 
   .field input {
@@ -174,13 +246,13 @@
 
   .submitBtn {
     padding: 13px;
-    font-size: 0.95rem;
+    font-size: 0.9rem;
   }
 
   .themeToggleFloat {
-    top: 14px;
-    right: 14px;
-    width: 38px;
-    height: 38px;
+    top: 16px;
+    right: 16px;
+    width: 40px;
+    height: 40px;
   }
 }

@@ -6,8 +6,9 @@ import styles from './Menu.module.css';
 
 const pricing = [
   { quantity: 'Single', pieces: '1 piece', price: '$3.50' },
-  { quantity: 'Quartet', pieces: '4 pieces', price: '$13.00' },
-  { quantity: 'Half Dozen', pieces: '6 pieces', price: '$18.00' },
+  { quantity: 'Quartet', pieces: '4 pieces', price: '$13.75' },
+  { quantity: 'Half Dozen', pieces: '6 pieces', price: '$20.00' },
+  { quantity: 'Catering', pieces: '30 pieces', price: '$100.00' },
 ];
 
 const Menu = () => {

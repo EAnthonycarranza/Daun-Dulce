@@ -1,9 +1,9 @@
 require('dotenv').config();
 const mongoose = require('mongoose');
-const Admin = require('./models/Admin');
 const Cookie = require('./models/Cookie');
+const SiteContent = require('./models/SiteContent');
 
-const defaultCookies = [
+const newFlavors = [
   {
     name: 'Daun Chocolate Chips',
     description: 'Our signature cookie loaded with rich chocolate chips, baked to soft, gooey perfection.',
@@ -86,41 +86,70 @@ const defaultCookies = [
   },
 ];
 
-const seed = async () => {
+const newPreOrderContent = {
+  heading: 'Daun Dulce Pre-Order Form',
+  subtitle: 'Reserve your fresh-baked cookies today!',
+  introParagraphs: [
+    'Hi there! We\'re so happy you\'re here! ✨',
+    'Thank you for choosing us to satisfy your sweet cravings!',
+    'All of our cookies are baked fresh -- soft, gooey, and made with love in every bite 🍪',
+    'Please fill out the form below to reserve your order. Once submitted, we\'ll send a confirmation with payment details.',
+    'We can\'t wait for you to try our cookies 🤍',
+    'Thank you for choosing us -- it truly means a lot!',
+  ],
+  quantities: [
+    '1 pc - $3.50',
+    '4 pcs - $13.75',
+    '6 pcs - $20.00',
+    '30 pcs - $100.00',
+    'Mini Cookies - $3.50',
+    'Brownie Bites - $4.00',
+  ],
+  paymentMethods: ['Debit/Credit Card', 'Zelle', 'CashApp', 'Apple Pay'],
+  pickupDates: ['Saturday 10 AM - 12 PM', 'Sunday 10 AM - 12 PM'],
+  terms: [
+    'I understand that my order is not confirmed until I receive a confirmation message/email.',
+    'I agree that full payment is required to secure my order. Unpaid orders may be canceled.',
+    'I acknowledge that I am responsible for arriving at my selected pickup date and time.',
+    'I understand that missed pickups may not be refunded.',
+    'I agree that all sales are final. No cancellations or refunds once payment is made.',
+    'I understand that products may contain or come in contact with allergens (wheat, dairy, eggs, soy, nuts).',
+  ],
+  successTitle: 'Order Submitted!',
+  successMessage: 'Thank you for your pre-order! We\'ll send you a confirmation with payment details soon.',
+  successNote: 'We can\'t wait for you to try our cookies!',
+};
+
+const update = async () => {
   try {
     await mongoose.connect(process.env.MONGO_URI);
     console.log('Connected to MongoDB');
 
-    // Seed admin
-    const username = process.env.ADMIN_USERNAME || 'admin';
-    const password = process.env.ADMIN_PASSWORD || 'admin123';
-
-    const existingAdmin = await Admin.findOne({ username });
-    if (existingAdmin) {
-      console.log(`Admin user "${username}" already exists. Updating password...`);
-      existingAdmin.password = password;
-      await existingAdmin.save();
-    } else {
-      await Admin.create({ username, password });
-      console.log(`Admin user "${username}" created successfully.`);
+    // Update Cookies
+    for (const cookie of newFlavors) {
+      await Cookie.findOneAndUpdate(
+        { name: cookie.name },
+        cookie,
+        { upsert: true, new: true }
+      );
     }
+    console.log('Updated cookies collection');
 
-    // Seed cookies (only if none exist)
-    const cookieCount = await Cookie.countDocuments();
-    if (cookieCount === 0) {
-      await Cookie.insertMany(defaultCookies);
-      console.log(`Seeded ${defaultCookies.length} cookies.`);
-    } else {
-      console.log(`${cookieCount} cookies already exist. Skipping cookie seed.`);
-    }
+    // Update Pre-Order Site Content
+    await SiteContent.findOneAndUpdate(
+      { page: 'preorder' },
+      { content: newPreOrderContent },
+      { upsert: true, new: true }
+    );
+    console.log('Updated pre-order site content');
 
     await mongoose.disconnect();
     console.log('Done.');
     process.exit(0);
   } catch (err) {
-    console.error('Seed error:', err.message);
+    console.error('Update error:', err.message);
     process.exit(1);
   }
 };
 
-seed();
+update();

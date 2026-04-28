@@ -40,6 +40,9 @@ const Home = () => {
             Soft, gooey, and quietly decadent — small-batch cookies crafted
             with the finest ingredients and an unhurried hand.
           </p>
+          <p className={styles.heroSlogan}>
+            Same Flavor, Same Price, Always Delicious
+          </p>
           <div className={styles.heroActions}>
             <Link to="/pre-order" className={styles.heroCta}>Pre-Order Now</Link>
             <Link to="/menu" className={styles.heroCtaGhost}>View the Menu</Link>
